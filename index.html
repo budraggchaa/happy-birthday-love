@@ -15,7 +15,7 @@
     html,body{height:100%}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
     .screen{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:24px}
-    .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:contrast(1.02) saturate(1.02)}
+    .bg{position:absolute;inset:0;filter:contrast(1.02) saturate(1.02)}
     .bg-grid{position:absolute;inset:0;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:6px;padding:6px}
     .bg-grid .cell{background-size:cover;background-position:center;border-radius:18px}
     .bg-grid .big{grid-row:1/3;grid-column:1/2}
@@ -44,7 +44,6 @@
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
     .modal.open{display:flex}
     .modal .inner{background:#fff;border-radius:24px;max-width:720px;width:100%;padding:22px;box-shadow:var(--shadow)}
-    #fx,#spark{position:fixed;inset:0;pointer-events:none;z-index:40}
     .tip{font-size:13px;opacity:.8}
     .falling-heart{position:fixed;top:-40px;left:0;font-size:24px;pointer-events:none;animation:fall linear forwards}
     @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.9}}
@@ -104,6 +103,7 @@
 
   <script>
   const CONFIG={
+    photos:["bday-1.jpg","bday-2.jpg","bday-3.jpg"],
     hubItems:[
       {key:"miss-me",label:"намайг санах",action:"Зүрхийг дарж тэврэлтийг мэдэр",poem:`Сайн уу хайрт минь. Энэ захидлыг уншиж байгаа өглөө, өдөр, оройн мэндийг хүргэе.
 Үүнийг уншиж байна гэдэг нь өнөөдөр чи минь намайг их л санасан бололтой.
@@ -112,13 +112,13 @@
 Чи бид хоёрын бие хэдий хол байгаа ч чи минь миний өглөө бүрийг угтах шалтгаан минь болж,
 цааш хичээх эрч хүчийг надад өгдөг юм шүү.
 Би ч гэсэн чамайгаа үнэхээр их санаж байна, үүнийг уншиж байх үед чинь ч санасаар л байгаа.
-Хайртай шүү, Тачмаанаа.`},
+Хайртай шүү, Тачмаанаа <3.`},
       {key:"are-sad",label:"гуниглах",action:"3 секунд дарж цэцэглүүл",poem:`Хайраа, амьдрал хааяа үнэхээр л новшийн байдаг. Юу ч болж бүтэхгүй байгаа юм шиг, би л болохгүй байгаа юм шиг өчнөөн зүйл тохиолдох үе бий.
 Гэхдээ гуниг гутрал бол зүгээр л борооны үүл шиг.
 Аянга цахилгаантай хав хар үүлнүүд хүртэл нарыг гарч ирэхийг зогсоож чаддаггүй шүү дээ.
 Хэрэв нар гарахгүй бол би нар болоод гуниг гутралыг чинь арилгая,
 чамд гэсэн хайраараа аз жаргалтай өдрүүд ирж байгааг өдөр бүр мэдрүүлж байя.
-Хэрэв надад чадал нь байвал нулимс бүрийн дуслыг цуглуулж, од болгон хувиргая.
+Хэрэв надад чадал нь байвал нулимс бүрийн дуслыг нь цуглуулж, од болгон хувиргая.
 Тэгж чадвал гуниг нь хүртэл харанхуйг гэрэлтүүлнэ шүү дээ.`},
       {key:"feel-lonely",label:"ганцаардах",action:"Өрөөг гэрэлтүүл",poem:`Амьдралын утга учир минь ээ. Чи минь ганцаараа биш шүү дээ.
 Хэрэв үнэхээр л ганцаараа юм шиг санагдаад, хүмүүс байгаа ч байхгүй юм шиг мэдрэгдэж байвал,
@@ -133,7 +133,8 @@
 Чамайг би байгаа чигээр чинь л хүлээн зөвшөөрдөг гэдгийг санаарай.
 Уурлах мэдрэмж байж л байдаг: чи уурлаж байна гэдэг чинь амьд байна гэсэн үг шүү дээ, хайрт минь.
 Зүгээр л дотроо үхчихсэн хүн биш гэдгийг илтгэж байгаа хэрэг.
-Яаж ч уурласан, юуг ч үзэн ядсан байсан Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`},
+Яаж ч уурласан, юуг ч үзэн ядсан байсан
+Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`},
       {key:"cant-sleep",label:"нойр нь хүрэхгүй байх",action:"Од тоолоё",poem:`Хэрэв унтах шаардлагатай ч нойр нь хүрэхгүй байвал
 намайг хажууд нь хэвтэж байгаа мэтээр төсөөлөөрэй.
 Тэврүүлээд, зүрхний минь цохилтыг мэдрээд, миний үнэрийг үнэрлээд,
@@ -141,50 +142,47 @@
 Хоёулаа хэд ч хүртэл тоолж болно доо…
 Гэхдээ 20 хүрээд л унтах байх аа.
 Сайхан амраарай, гүнж минь.`},
-      {key:"want-a-smile",label:"инээмсэглэхийг хүсэх",action:"Инээмсэглээрэй",poem:`“Чи юу идээд байгаан, хэлээч амаа ангай” гэхээр чихэнд нь сонсогдож байна уу, хайраа?
+      {key:"want-a-smile",label:"инээмсэглэхийг хүсэх",action:"Инээмсэглээрэй",poem:`“Чи юу идээд байгаан, хэлээч амаа ангай” гэхээр чихэнд нь 
+      сонсогдож байна уу, хайраа
 Хэрэв жаахан ч гэсэн инээмсэглэл хэрэгтэй бол миний чамайг инээлгэдэг байсан жижиг зүйлсийг санаарай.
-Амьдрал хэцүү байсан ч би чинийхээ үргэлж мишээх шалтгаан нь байхыг хичээнэ.
+Амьдрал хэцүү байсан ч би чинийхээ үргэлж мишээх шалтгаан нь байхыг хичээнээ.
 Инээгээрэй, Баби.`},
-      {key:"wake-up",label:"дөнгөж сэрээд",action:"Өглөөний мэндийг нээ",poem:`Өглөөний мэнд, хайртай минь. Би яг одоо магадгүй унтаж байгаа эсвэл аль хэдийн сэрчихсэн, хорвоогийн хаа нэгтээ Хятад гэдэг улсаас өглөөний мэнд хүргэж л байгаа байх.
+      {key:"wake-up",label:"дөнгөж сэрээд",action:"Гэгээн Өглөө",poem:`Өглөөний мэнд, хайрт минь. Би яг одоо магадгүй унтаж байгаа эсвэл аль хэдийн сэрчихсэн, хорвоогийн хаа нэгтээ Хятад гэдэг улсаас өглөөний мэнд хүргэж л байгаа байх.
 Өглөө бүрийн миний эхний бодол чи минь байдаг шүү.
 Сэрэх шалтгаан минь болж өгдөгт баярлалаа.`},
-      {key:"sick",label:"өвдчихсөн үедээ",action:"Намайг санаж уншаарай",poem:`Хэрэв би супер хүчтэй байсан бол бүх өвдөлтийг чинь аваад шидчихмээр санагдана.
-Чамайгаа гунигтай, өвдчихсөн байхыг харах миний хувьд хамгийн хэцүү зүйл минь шүү.
-Надад ид шид байхгүй тул эдгэртэл нь халамж, хайр л өгч чадна.`},
-      {key:"need-me",label:"хэрэв би хэрэг болбол",action:"Намайг дуудаарай",poem:`Хэрэв миний хэрэг болвол юу ч бодолгүй залгаарай, Babi.
-Чадах бүхнээрээ туслахыг хичээнэ.
+      {key:"sick",label:"өвдчихсөн үедээ",action:"Хурдан Эдгээрэй",poem:`Хэрэв би супер хүчтэй байсан бол бүх өвдөлтийг чинь аваад шидчихмээр санагдах юм.
+Чамайгаа гунигтай, өвдчихсөн байхыг харах миний хувьд хамгийн хэцүү зүйл минь шүү .
+Надад ид шид байхгүй тул эдгэртэл нь халамж, хайр л өгч чадахаар байна даа Babi.`},
+      {key:"need-me",label:"хэрэв би хэрэг болвол",action:"Намайг дуудаарай",poem:`Хэрэв миний хэрэг болвол юу ч бодолгүй залгаарай, Babi.
+Чадах бүхнээрээ туслахыг хичээнэшүү.
 Боломж байвал нүд ирмэх төдийд л хажууд чинь байхыг хичээнэ.`}
     ]
   };
 
   const AUDIO_MAP={
-    'miss-me':'miss-me.mp3',
-    'are-sad':'are-sad.mp3',
-    'feel-lonely':'feel-lonely.mp3',
-    'are-angry':'are-angry.mp3',
-    'cant-sleep':'cant-sleep.mp3',
-    'want-a-smile':'want-a-smile.mp3',
-    'wake-up':'wake-up.mp3',
-    'sick':'sick.mp3',
-    'need-me':'need-me.mp3'
-  };
+    'miss-me':'miss-me.mp3','are-sad':'are-sad.mp3','feel-lonely':'feel-lonely.mp3','are-angry':'are-angry.mp3','cant-sleep':'cant-sleep.mp3','want-a-smile':'want-a-smile.mp3','wake-up':'wake-up.mp3','sick':'sick.mp3','need-me':'need-me.mp3'};
 
   const PLAY_LABEL='▶ Дууг тоглуулах';
   const PAUSE_LABEL='⏸ Дууг түр зогсоох';
-
   const $=s=>document.querySelector(s);
   const audioBtn=$('#audioBtn');
   const beat=$('#beat');
   let currentItem=null;
 
+  const bg=document.getElementById('bg');
+  function buildBgGrid(){
+    bg.innerHTML='';
+    const grid=document.createElement('div');
+    grid.className='bg-grid';
+    const [a,b,c]=CONFIG.photos;
+    const cells=[{cls:'cell big',url:a},{cls:'cell t1',url:b},{cls:'cell t2',url:c}];
+    cells.forEach(({cls,url})=>{const d=document.createElement('div');d.className=cls;d.style.backgroundImage=`url(${url})`;grid.appendChild(d)});
+    bg.appendChild(grid);
+  }
+  buildBgGrid();
+
   const hub=document.getElementById('hub');
-  CONFIG.hubItems.forEach(item=>{
-    const el=document.createElement('button');
-    el.className='pill';
-    el.innerHTML=`<span>— <b>Чи минь ${item.label}</b></span> <small>нээх</small>`;
-    el.addEventListener('click',()=>openPoem(item));
-    hub.appendChild(el);
-  });
+  CONFIG.hubItems.forEach(item=>{const el=document.createElement('button');el.className='pill';el.innerHTML=`<span>— <b>Чи минь ${item.label}</b></span> <small>нээх</small>`;el.addEventListener('click',()=>openPoem(item));hub.appendChild(el)});
 
   function openPoem(item){
     currentItem=item;
@@ -192,33 +190,14 @@
     document.getElementById('poemBody').textContent=item.poem;
     document.getElementById('moodChip').textContent=`Чи минь ${item.label}`;
     document.getElementById('actionBtn').textContent=item.action;
-    const key=item.key;
-    const audioFile=AUDIO_MAP[key];
-    if(audioFile){
-      beat.src=audioFile;
-      audioBtn.style.display='inline-flex';
-      audioBtn.textContent=PLAY_LABEL;
-    }else{
-      audioBtn.style.display='none';
-    }
+    const audioFile=AUDIO_MAP[item.key];
+    if(audioFile){beat.src=audioFile;audioBtn.style.display='inline-flex';audioBtn.textContent=PLAY_LABEL;}else{audioBtn.style.display='none'}
     document.getElementById('poemModal').classList.add('open');
   }
 
-  document.getElementById('backBtn').addEventListener('click',()=>{
-    beat.pause(); beat.currentTime=0;
-    document.getElementById('poemModal').classList.remove('open');
-  });
+  document.getElementById('backBtn').addEventListener('click',()=>{beat.pause();beat.currentTime=0;document.getElementById('poemModal').classList.remove('open')});
 
-  audioBtn.addEventListener('click',()=>{
-    if(!currentItem) return;
-    if(beat.paused){
-      beat.play();
-      audioBtn.textContent=PAUSE_LABEL;
-    } else {
-      beat.pause();
-      audioBtn.textContent=PLAY_LABEL;
-    }
-  });
+  audioBtn.addEventListener('click',()=>{if(!currentItem)return;if(beat.paused){beat.play();audioBtn.textContent=PAUSE_LABEL;}else{beat.pause();audioBtn.textContent=PLAY_LABEL;}});
 
   const actionBtn=document.getElementById('actionBtn');
   function heartRain(n=120){for(let i=0;i<n;i++){const h=document.createElement('div');h.className='falling-heart';h.textContent='❤';const size=18+Math.random()*22;const left=Math.random()*100;const dur=4+Math.random()*5;const delay=Math.random()*1.2;h.style.left=left+'vw';h.style.fontSize=size+'px';h.style.animationDuration=dur+'s';h.style.animationDelay=delay+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),(dur+delay)*1000+500)}}
@@ -229,16 +208,6 @@
   function smileRain(){for(let i=0;i<50;i++){const e=document.createElement('div');e.className='em';e.textContent=Math.random()<.5?'😊':'😂';const size=18+Math.random()*22;const left=Math.random()*100;const dur=3.5+Math.random()*3;e.style.left=left+'vw';e.style.top='100vh';e.style.fontSize=size+'px';e.style.animation='rise '+dur+'s linear forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),dur*1000+400)}}
   function glowComfort(){for(let i=0;i<40;i++){const e=document.createElement('div');e.className='em';e.textContent=Math.random()<.6?'✨':'🕯️';const size=18+Math.random()*20;const left=Math.random()*100;const dur=3+Math.random()*3;e.style.left=left+'vw';e.style.top='100vh';e.style.fontSize=size+'px';e.style.animation='rise '+dur+'s linear forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),dur*1000+400)}}
   function stormToSun(){const layer=document.createElement('div');layer.className='float';layer.style.inset='0';layer.style.zIndex='44';document.body.appendChild(layer);for(let i=0;i<8;i++){const c=document.createElement('div');c.className='em';c.textContent='☁️';const size=60+Math.random()*60;c.style.fontSize=size+'px';c.style.left=(-10+Math.random()*10)+'vw';c.style.top=(10+Math.random()*50)+'vh';c.style.opacity='.95';c.style.animation='cloudRight 8s linear forwards';layer.appendChild(c)}const sun=document.createElement('div');sun.className='em';sun.textContent='☀️';sun.style.fontSize='120px';sun.style.left='4vw';sun.style.top='6vh';sun.style.animation='sunpop 8s ease';sun.style.zIndex='47';layer.appendChild(sun);setTimeout(()=>layer.remove(),9000)}
-
-  const pulseHeart=document.getElementById('pulseHeart');
-  let pressTimer;
-  function startPress(){pressTimer=setTimeout(()=>{heartRain(140)},900)}
-  function cancelPress(){clearTimeout(pressTimer)}
-  pulseHeart.addEventListener('mousedown',startPress);
-  pulseHeart.addEventListener('touchstart',startPress);
-  pulseHeart.addEventListener('mouseup',cancelPress);
-  pulseHeart.addEventListener('mouseleave',cancelPress);
-  pulseHeart.addEventListener('touchend',cancelPress);
 
   actionBtn.addEventListener('click',()=>{
     if(!currentItem) return;
@@ -251,19 +220,20 @@
     if(key==='feel-lonely') return glowComfort();
   });
 
-  if(location.hash==='#test'){
-    const out=[];
-    try{
-      if(typeof stormToSun!=="function") out.push('stormToSun missing');
-      if(typeof bloomFlowers!=="function") out.push('bloomFlowers missing');
-      if(typeof heartRain!=="function") out.push('heartRain missing');
-      const btns=[...document.querySelectorAll('#hub button')];
-      if(btns.length!==CONFIG.hubItems.length) out.push('hub render mismatch');
-      openPoem(CONFIG.hubItems[0]);
-      if(!audioBtn.style.display||audioBtn.style.display==='none') out.push('audio button hidden');
-    }catch(e){out.push('exception: '+e.message)}
-    console.log(out.length? '❌ '+out.join(' | ') : '✅ Tests passed');
-  }
+  const pulseHeart=document.getElementById('pulseHeart');
+  let pressTimer;
+  function startPress(){pressTimer=setTimeout(()=>{heartRain(140)},900)}
+  function cancelPress(){clearTimeout(pressTimer)}
+  pulseHeart.addEventListener('mousedown',startPress);
+  pulseHeart.addEventListener('touchstart',startPress);
+  pulseHeart.addEventListener('mouseup',cancelPress);
+  pulseHeart.addEventListener('mouseleave',cancelPress);
+  pulseHeart.addEventListener('touchend',cancelPress);
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+  const poemModal=document.getElementById('poemModal');
+  poemModal.addEventListener('click',e=>{if(e.target===poemModal) poemModal.classList.remove('open')});
+  addEventListener('keydown',e=>{if(e.key==='Escape') poemModal.classList.remove('open')});
   </script>
 </body>
 </html>
