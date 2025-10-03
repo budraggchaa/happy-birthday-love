@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Төрсөн өдрийн мэнд, хайрт минь</title>
+  <meta name="theme-color" content="#ffb3c7" />
+  <meta name="description" content="A tiny interactive website that says happy birthday in a magical way." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Marck+Script&display=swap" rel="stylesheet">
+  <style>
+    :root{--pink:#FFBED1;--rose:#FF9BB8;--blush:#FFE7ED;--ink:#3D2B2B;--cream:#FFF7F2;--lilac:#E9E2FF;--shadow:0 10px 30px rgba(61,43,43,.12)}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
+    .screen{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:24px}
+    .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:contrast(1.02) saturate(1.02)}
+    .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.25))}
+    .card{position:relative;z-index:2;backdrop-filter:blur(6px);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);border-radius:28px;box-shadow:var(--shadow);padding:28px;max-width:980px;width:100%}
+    h1.title{font-family:'Marck Script',cursive;font-size:clamp(40px,8vw,92px);line-height:1;color:#fff;margin:0 0 12px;text-align:center;text-shadow:0 4px 30px rgba(0,0,0,.35)}
+    .subtitle{color:#fff;text-align:center;margin:0 0 24px;opacity:.95;font-weight:600}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--pink),var(--rose));color:#4b2b2b;border:none;border-radius:999px;padding:14px 22px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);text-decoration:none}
+    .btn:hover{transform:translateY(-1px)}
+    .pill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
+    .pill{border-radius:999px;background:rgba(255,255,255,.85);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border:1px solid #fff;backdrop-filter:blur(4px);cursor:pointer;box-shadow:var(--shadow)}
+    .pill span{font-weight:700}
+    .pill small{opacity:.7}
+    .hdr{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+    .hdr h2{margin:0;font-size:28px}
+    .chip{background:var(--blush);border:1px solid #fff;padding:6px 12px;border-radius:999px;font-weight:700}
+    .poem{white-space:pre-line;font-size:18px;line-height:1.75}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .ghost{background:transparent;border:1.5px solid rgba(0,0,0,.1)}
+    .footer{margin-top:18px;opacity:.7;font-size:14px}
+    .heart{width:22px;height:22px;display:inline-block;background:radial-gradient(circle at 30% 30%, #fff, #ffd4e1 40%, #ff9bb8);clip-path:path('M12 21s-7.5-4.35-10-9.5S3.5 1 7 5c1.65 1.8 2.4 3 5 0 3.5-4 10-1 5 6.5S12 21 12 21Z')}
+    .hidden{display:none}
+    .center{text-align:center}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+    .modal.open{display:flex}
+    .modal .inner{background:#fff;border-radius:24px;max-width:720px;width:100%;padding:22px;box-shadow:var(--shadow)}
+    #fx,#spark{position:fixed;inset:0;pointer-events:none;z-index:40}
+    .tip{font-size:13px;opacity:.8}
+    .falling-heart{position:fixed;top:-40px;left:0;font-size:24px;pointer-events:none;animation:fall linear forwards}
+    @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.9}}
+    .float{position:fixed;left:0;top:0;pointer-events:none;z-index:45}
+    .em{position:fixed;will-change:transform,opacity}
+    @keyframes rise{to{transform:translateY(-110vh) rotate(360deg);opacity:.95}}
+    @keyframes drift{to{transform:translateY(-90vh) translateX(20vw);opacity:.9}}
+    @keyframes sunpop{0%{transform:scale(.6);opacity:0}50%{transform:scale(1.05);opacity:1}100%{transform:scale(1)}}
+    @keyframes cloudRight{to{transform:translateX(40vw);opacity:.95}}
+    @keyframes bloom{0%{transform:scale(0);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+  </style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+  <canvas id="spark"></canvas>
+  <section class="screen" id="home">
+    <div id="bg" class="bg"></div>
+    <div class="card center">
+      <h1 class="title">ТӨРСӨН ӨДРИЙН МЭНД, ХАЙРТ МИНЬ</h1>
+      <p class="subtitle" id="subtitle">Энэхүү бяцхан буланг хамгаас хайртай чамдаа зориулав</p>
+      <a href="#when" class="btn" onclick="confetti(200)"> <span class="heart"></span> Бэлгээ нээх</a>
+      <div style="height:10px"></div>
+      <div class="tip">Доорх зүрхийг удаан дарвал зүрхэн бороо орно ✨</div>
+      <div style="height:12px"></div>
+      <button class="btn ghost" id="pulseHeart" aria-label="heart">❤</button>
+    </div>
+  </section>
+  <section class="screen" id="when" style="background:linear-gradient(180deg, var(--blush), #fff)">
+    <div class="card">
+      <div class="hdr">
+        <span class="chip">ХЭРВЭЭ ЧИ</span>
+        <h2>Миний хайр юу мэдэрч байна</h2>
+      </div>
+      <div class="pill-grid" id="hub"></div>
+      <div class="footer">Made with love. <span class="heart"></span></div>
+    </div>
+  </section>
+  <div class="modal" id="poemModal" role="dialog" aria-modal="true" aria-labelledby="poemTitle">
+    <div class="inner">
+      <div class="nav" style="justify-content:space-between;align-items:center">
+        <button class="btn ghost" id="backBtn">← Буцах</button>
+        <div class="chip" id="moodChip">Хэрвээ чи…</div>
+      </div>
+      <div class="hdr" style="margin-top:8px">
+        <div class="heart"></div>
+        <h2 id="poemTitle">Чи минь …</h2>
+      </div>
+      <div class="poem" id="poemBody"></div>
+      <div style="height:16px"></div>
+      <div class="nav">
+        <button class="btn" id="actionBtn">Инээмсэглээрэй</button>
+        <button class="btn ghost" id="audioBtn" title="Play/pause sound">► Дуу</button>
+      </div>
+    </div>
+  </div>
+  <audio id="beat" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_6a3ab5b1e3.mp3?filename=heartbeat-01-108434.mp3" type="audio/mpeg" />
+  </audio>
+  <script>
+  const $=s=>document.querySelector(s);
+  const $$=s=>Array.from(document.querySelectorAll(s));
+  const fx=document.getElementById('fx');
+  const spark=document.getElementById('spark');
+  const ctx=fx.getContext('2d');
+  const sctx=spark.getContext('2d');
+  function sizeCanvases(){fx.width=innerWidth;fx.height=innerHeight;spark.width=innerWidth;spark.height=innerHeight}
+  addEventListener('resize',sizeCanvases);sizeCanvases();
+  let bits=[];const colors=['#FFBED1','#FFD3A3','#E9E2FF','#B9E6FF','#C5F8CF'];
+  function confetti(n=60){for(let i=0;i<n;i++){bits.push({x:Math.random()*fx.width,y:-10,vy:1+Math.random()*3,vx:-2+Math.random()*4,size:4+Math.random()*8,rot:Math.random()*Math.PI,color:colors[(Math.random()*colors.length)|0]})}}
+  function animate(){ctx.clearRect(0,0,fx.width,fx.height);bits.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.rot+=0.02;ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.fillStyle=b.color;ctx.fillRect(-b.size/2,-b.size/2,b.size,b.size);ctx.restore()});bits=bits.filter(b=>b.y<fx.height+20);requestAnimationFrame(animate)}
+  animate();
+  function heartRain(n=120){for(let i=0;i<n;i++){const h=document.createElement('div');h.className='falling-heart';h.textContent='❤';const size=18+Math.random()*22;const left=Math.random()*100;const dur=4+Math.random()*5;const delay=Math.random()*1.5;h.style.left=left+'vw';h.style.fontSize=size+'px';h.style.animationDuration=dur+'s';h.style.animationDelay=delay+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),(dur+delay)*1000+500)}}
+  let sparks=[];
+  function sparkleBurst(){const cx=innerWidth/2,cy=innerHeight/2;for(let i=0;i<50;i++){const a=Math.random()*Math.PI*2,sp=1+Math.random()*3;sparks.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:60})}}
+  function sparkLoop(){sctx.clearRect(0,0,spark.width,spark.height);sparks.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life--;sctx.globalAlpha=Math.max(p.life/60,0);sctx.beginPath();sctx.arc(p.x,p.y,1.8,0,Math.PI*2);sctx.fillStyle='#fff';sctx.fill()});sparks=sparks.filter(p=>p.life>0);requestAnimationFrame(sparkLoop)}
+  sparkLoop();
+  const CONFIG={
+    herName:"Үлэмжээ",
+    backgroundImage:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1600&auto=format&fit=crop",
+    hubItems:[
+      {key:"miss-me",label:"намайг санах",action:"Зүрхийг дарж тэврэлтийг мэдэр",poem:`Сайн уу хайртай минь. Энэ захидлыг уншиж байгаа өглөө, өдөр, оройн мэндийг хүргэе.
+Үүнийг уншиж байна гэдэг нь өнөөдөр чи минь намайг их л санасан бололтой.
+Намайг санах бүртээ үүнийг санаарай: чи бид хоёр хэдий хамт байхгүй байгаа ч бид нэг тэнгэрийг өдөр бүр харж,
+зүрхний цохилт бүрт минь чи байгаа гэдгийг санаарай.
+Чи бид хоёрын бие хэдий хол байгаа ч чи минь миний өглөө бүрийг угтах шалтгаан минь болж,
+цааш хичээх эрч хүчийг надад өгдөг юм шүү.
+Би ч гэсэн чамайгаа үнэхээр их санаж байна, үүнийг уншиж байх үед чинь ч санасаар л байгаа.
+Хайртай шүү, Тачмаанаа.`,audio:true},
+      {key:"are-sad",label:"гуниглах",action:"3 секунд дарж цэцэглүүл",poem:`Хайраа, амьдрал хааяа үнэхээр л новшийн байдаг. Юу ч болж бүтэхгүй байгаа юм шиг, би л болохгүй байгаа юм шиг өчнөөн зүйл тохиолдох үе бий.
+Гэхдээ гуниг гутрал бол зүгээр л борооны үүл шиг.
+Аянга цахилгаантай хав хар үүлнүүд хүртэл нарыг гарч ирэхийг зогсоож чаддаггүй шүү дээ.
+Хэрэв нар гарахгүй бол би нар болоод гуниг гутралыг чинь арилгая,
+чамд гэсэн хайраараа аз жаргалтай өдрүүд ирж байгааг өдөр бүр мэдрүүлж байя.
+Хэрэв надад чадал нь байвал нулимс бүрийн дуслыг цуглуулж, од болгон хувиргая.
+Тэгж чадвал гуниг нь хүртэл харанхуйг гэрэлтүүлнэ шүү дээ.`,audio:false},
+      {key:"feel-lonely",label:"ганцаардах",action:"Өрөөг гэрэлтүүл",poem:`Амьдралын утга учир минь ээ. Чи минь ганцаараа биш шүү дээ.
+Хэрэв үнэхээр л ганцаараа юм шиг санагдаад, хүмүүс байгаа ч байхгүй юм шиг мэдрэгдэж байвал,
+нүдээ аниад намайг хажууд чинь байгаа мэтээр төсөөлөөрэй, хайрт минь.
+Гарыг нь чанга атгаад, мөрийг нь зөөлөн товшоод л…
+Чи минь ганцаараа биш ээ. Явсан газар бүрт нь чамайгаа гэсэн сэтгэл минь хамт байгаа гэдгийг санаарай.
+Хайртай шүү.`,audio:false},
+      {key:"are-angry",label:"уурлах",action:"Нар гаргая",poem:`Babi, уурлах олон шалтгаан байгаа л даа. Би ч бас яагаад чи минь одоо уурлаж байгааг сайн мэдэхгүй л байна.
+Магадгүй ажил дээр янз бүрийн зүйл болсон байх, сонин үйлчлүүлэгч ч юм уу, эсвэл менежер ч юм уу,
+бүр гэрийнхэн эсвэл найзуудынх нь хэн нэгнээс болсон ч байж магадгүй.
+Гэхдээ хайраа, дотор нь юу ч болж байсан, яаж ч уур нь буцалж байсан надтай ярьж болно шүү.
+Чамайг би байгаа чигээр чинь л хүлээн зөвшөөрдөг гэдгийг санаарай.
+Уурлах мэдрэмж байж л байдаг: чи уурлаж байна гэдэг чинь амьд байна гэсэн үг шүү дээ, хайрт минь.
+Зүгээр л дотроо үхчихсэн хүн биш гэдгийг илтгэж байгаа хэрэг.
+Яаж ч уурласан, юуг ч үзэн ядсан байсан
+Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`,audio:false},
+      {key:"cant-sleep",label:"нойр нь хүрэхгүй байх",action:"Од тоолоё",poem:`Хэрэв унтах шаардлагатай ч нойр нь хүрэхгүй байвал
+намайг хажууд нь хэвтэж байгаа мэтээр төсөөлөөрэй.
+Тэврүүлээд, зүрхний минь цохилтыг мэдрээд, миний үнэрийг үнэрлээд,
+хамтдаа хонь тоолж байна гэж бодоорой.
+Хоёулаа хэд ч хүртэл тоолж болно доо…
+Гэхдээ 20 хүрээд л унтах байх аа.
+Сайхан амраарай, гүнж минь.`,audio:false},
+      {key:"want-a-smile",label:"инээмсэглэхийг хүсэх",action:"Инээмсэглээрэй",poem:`“Чи юу идээд байгаан, хэлээч амаа ангай” гэхээр чихэнд нь 
+      сонсогдож байна уу, хайраа
+Хэрэв жаахан ч гэсэн инээмсэглэл хэрэгтэй бол миний чамайг инээлгэдэг байсан жижиг зүйлсийг санаарай.
+Амьдрал хэцүү байсан ч би чинийхээ үргэлж мишээх шалтгаан нь байхыг хичээнээ.
+Инээгээрэй, Баби.`,audio:false},
+      {key:"wake-up",label:"дөнгөж сэрээд",action:"Гэгээн Өглөө",poem:`Өглөөний мэнд, хайртай минь. Би яг одоо магадгүй унтаж байгаа эсвэл аль хэдийн сэрчихсэн, хорвоогийн хаа нэгтээ Хятад гэдэг улсаас өглөөний мэнд хүргэж л байгаа байх.
+Өглөө бүрийн миний эхний бодол чи минь байдаг шүү.
+Сэрэх шалтгаан минь болж өгдөгт баярлалаа.`,audio:false},
+      {key:"sick",label:"өвдчихсөн үедээ",action:"Хурдан Эдгээрэй",poem:`Хэрэв би супер хүчтэй байсан бол бүх өвдөлтийг чинь аваад шидчихмээр санагдана.
+Чамайгаа гунигтай, өвдчихсөн байхыг харах миний хувьд хамгийн хэцүү зүйл минь шүү .
+Надад ид шид байхгүй тул эдгэртэл нь халамж, хайр л өгч чадахаар байна даа Babi.`,audio:false},
+      {key:"need-me",label:"хэрэв би хэрэг болвол",action:"Намайг дуудаарай",poem:`Хэрэв миний хэрэг болвол юу ч бодолгүй залгаарай, Babi.
+Чадах бүхнээрээ туслахыг хичээнэшүү.
+Боломж байвал нүд ирмэх төдийд л хажууд чинь байхыг хичээнэ.`,audio:false}
+    ],
+    reasonsILoveYou:[]
+  };
+  const bg=document.getElementById('bg');
+  const herNameEl=document.getElementById('herName');
+  function applyConfig(){if(herNameEl) herNameEl.textContent=CONFIG.herName;bg.style.backgroundImage=`url(${CONFIG.backgroundImage})`}
+  applyConfig();
+  let pressTimer;const pulseHeart=document.getElementById('pulseHeart');
+  function startPress(){pressTimer=setTimeout(()=>{heartRain(140)},900)}
+  function cancelPress(){clearTimeout(pressTimer)}
+  pulseHeart.addEventListener('mousedown',startPress);
+  pulseHeart.addEventListener('touchstart',startPress);
+  pulseHeart.addEventListener('mouseup',cancelPress);
+  pulseHeart.addEventListener('mouseleave',cancelPress);
+  pulseHeart.addEventListener('touchend',cancelPress);
+  const hub=document.getElementById('hub');
+  CONFIG.hubItems.forEach(item=>{const el=document.createElement('button');el.className='pill';el.innerHTML=`<span>— <b>Чи минь ${item.label}</b></span> <small>нээх</small>`;el.addEventListener('click',()=>openPoem(item));hub.appendChild(el)});
+  const poemModal=$('#poemModal');
+  const poemTitle=$('#poemTitle');
+  const poemBody=$('#poemBody');
+  const moodChip=$('#moodChip');
+  const actionBtn=$('#actionBtn');
+  const audioBtn=$('#audioBtn');
+  const beat=$('#beat');
+  let currentItem=null;
+  function openPoem(item){poemTitle.textContent=`Чи минь ${item.label}`;poemBody.textContent=item.poem;moodChip.textContent=`Чи минь ${item.label}`;actionBtn.textContent=item.action;audioBtn.style.display=item.audio?'inline-flex':'none';poemModal.classList.add('open');confetti(40);currentItem=item}
+  document.getElementById('backBtn').addEventListener('click',()=>poemModal.classList.remove('open'));
+  actionBtn.addEventListener('click',()=>{if(!currentItem)return;if(currentItem.key==='miss-me'){pulseHug()}else if(currentItem.key==='are-sad'){holdToBloom(actionBtn,1200).then(()=>{bloomFlowers()})}else if(currentItem.key==='are-angry'){stormToSun()}else if(currentItem.key==='cant-sleep'){starDrift()}else if(currentItem.key==='want-a-smile'){smileRain()}});
+  audioBtn.addEventListener('click',()=>{if(beat.paused){playBeat()}else{beat.pause()}});
+  function playBeat(){beat.currentTime=0;beat.play()}
+  function pulse(){const el=document.createElement('div');el.style.position='fixed';el.style.inset='0';el.style.pointerEvents='none';el.style.zIndex='30';el.innerHTML='<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:120px;">❤</div>';document.body.appendChild(el);setTimeout(()=>el.remove(),600)}
+  function pulseHug(){playBeat();heartRain(160);const o=document.createElement('div');o.style.position='fixed';o.style.inset='0';o.style.zIndex='46';o.style.pointerEvents='none';o.innerHTML='<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:180px;animation:sunpop .9s ease;">❤</div>';document.body.appendChild(o);setTimeout(()=>o.remove(),1200)}
+  function holdToBloom(btn,ms=1500){return new Promise(res=>{let t;const down=()=>{t=setTimeout(()=>{btn.removeEventListener('mouseup',up);btn.removeEventListener('touchend',up);res()},ms)};const up=()=>{clearTimeout(t)};btn.addEventListener('mousedown',down,{once:true});btn.addEventListener('touchstart',down,{once:true});btn.addEventListener('mouseup',up,{once:true});btn.addEventListener('touchend',up,{once:true})})}
+  function bloomFlowers(){for(let i=0;i<42;i++){const e=document.createElement('div');e.className='em';e.textContent=Math.random()<.33?'🌷':(Math.random()<.5?'🌸':'🌼');const size=24+Math.random()*28;const left=Math.random()*100;const top=72+Math.random()*20;const dur=.9+Math.random()*0.6;e.style.left=left+'vw';e.style.top=top+'vh';e.style.fontSize=size+'px';e.style.animation='bloom '+dur+'s ease-out forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),dur*1000+800)}}
+  function starDrift(){for(let i=60;i--;){const e=document.createElement('div');e.className='em';e.textContent=Math.random()<.15?'🌙':'⭐';const size=16+Math.random()*18;const left=Math.random()*100;const dur=4+Math.random()*4;e.style.left=left+'vw';e.style.top='100vh';e.style.fontSize=size+'px';e.style.animation='drift '+dur+'s linear forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),dur*1000+400)}}
+  function smileRain(){for(let i=0;i<50;i++){const e=document.createElement('div');e.className='em';e.textContent=Math.random()<.5?'😊':'😂';const size=18+Math.random()*22;const left=Math.random()*100;const dur=3.5+Math.random()*3;e.style.left=left+'vw';e.style.top='100vh';e.style.fontSize=size+'px';e.style.animation='rise '+dur+'s linear forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),dur*1000+400)}}
+  function stormToSun(){const layer=document.createElement('div');layer.className='float';layer.style.inset='0';layer.style.zIndex='44';document.body.appendChild(layer);for(let i=0;i<8;i++){const c=document.createElement('div');c.className='em';c.textContent='☁️';const size=60+Math.random()*60;c.style.fontSize=size+'px';c.style.left=(-10+Math.random()*10)+'vw';c.style.top=(10+Math.random()*50)+'vh';c.style.opacity='.95';c.style.animation='cloudRight 3s linear forwards';layer.appendChild(c)}const sun=document.createElement('div');sun.className='em';sun.textContent='☀️';sun.style.fontSize='120px';sun.style.left='4vw';sun.style.top='6vh';sun.style.animation='sunpop .9s ease';sun.style.zIndex='47';layer.appendChild(sun);confetti(120);setTimeout(()=>layer.remove(),1800)}
+  function twinkleStars(){alert('⭐ Close your eyes and count 10 stars for me.')}
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+  ;[poemModal].forEach(mod=>{mod.addEventListener('click',e=>{if(e.target===mod)mod.classList.remove('open')});addEventListener('keydown',e=>{if(e.key==='Escape')mod.classList.remove('open')})});
+  let keyBuf='';
+  addEventListener('keydown',e=>{keyBuf=(keyBuf+e.key).slice(-4);if(keyBuf.toLowerCase()==='edit'){const name=prompt('Her name?',CONFIG.herName)||CONFIG.herName;const url=prompt('Background image URL?',CONFIG.backgroundImage)||CONFIG.backgroundImage;CONFIG.herName=name;CONFIG.backgroundImage=url;applyConfig();alert('Updated! Remember to save your edited file for permanence.')}});
+  setTimeout(()=>confetti(70),800);
+  if(location.hash==='#test')(function runTests(){
+    const out=[];
+    try{
+      if(typeof confetti!=='function') out.push('confetti missing');
+      if(typeof heartRain!=='function') out.push('heartRain missing');
+      if(typeof startPress!=='function') out.push('startPress missing');
+      if(!Array.isArray(CONFIG.hubItems)||CONFIG.hubItems.length===0) out.push('hubItems empty');
+      const bad=CONFIG.hubItems.filter(it=>!(it.key&&it.label&&it.action&&typeof it.poem==='string'));
+      if(bad.length) out.push('hub items incomplete: '+bad.map(b=>b.key).join(','));
+      const btns=[...document.querySelectorAll('#hub button')];
+      if(btns.length!==CONFIG.hubItems.length) out.push('hub render mismatch');
+      if(btns.some(b=>/үед\s*$/.test(b.textContent))) out.push('unwanted "үед" in hub');
+      openPoem(CONFIG.hubItems[0]);
+      if(/үед\s*$/.test(document.getElementById('poemTitle').textContent)) out.push('title has unwanted "үед"');
+      document.getElementById('backBtn').click();
+      const beforeF=document.querySelectorAll('.em').length; bloomFlowers(); const afterF=document.querySelectorAll('.em').length; if(afterF<=beforeF) out.push('bloom flowers failed');
+      const beforeS=document.querySelectorAll('.em').length; stormToSun(); const afterS=document.querySelectorAll('.em').length; if(afterS<=beforeS) out.push('storm effect failed');
+      ;['miss-me','are-sad','are-angry','cant-sleep','want-a-smile'].forEach(k=>{try{openPoem(CONFIG.hubItems.find(x=>x.key===k));actionBtn.click();}catch(e){out.push('action error '+k)}})
+    }catch(e){out.push('exception: '+e.message)}
+    console.log(out.length? '❌ '+out.join(' | ') : '✅ Tests passed')
+  })();
+  setTimeout(()=>{var pm=document.getElementById('poemModal'); if(pm) pm.classList.remove('open');},0);
+  </script>
+</body>
+</html>
