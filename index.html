@@ -12,8 +12,21 @@
   <style>
     :root{--pink:#FFBED1;--rose:#FF9BB8;--blush:#FFE7ED;--ink:#3D2B2B;--cream:#FFF7F2;--lilac:#E9E2FF;--shadow:0 10px 30px rgba(61,43,43,.12)}
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;cursor:none}
+    html,body{height:100%; margin:0; padding:0;}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;cursor:none}
+
+    /* ✅ Fix white gap caused by canvases */
+    canvas#fx,
+    canvas#spark {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0; /* keep behind everything */
+    }
+
     .screen{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
     .bg{position:absolute;inset:0;filter:contrast(1.02) saturate(1.02)}
     .bg-grid{position:absolute;inset:0;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:0;padding:0;margin:0}
@@ -79,6 +92,10 @@
       <button class="btn ghost" id="pulseHeart" aria-label="heart">❤</button>
     </div>
   </section>
+  <!-- rest of your HTML unchanged -->
+</body>
+</html>
+
   <section class="screen" id="when" style="background:linear-gradient(180deg, var(--blush), #fff)">
     <div class="card">
       <div class="hdr">
