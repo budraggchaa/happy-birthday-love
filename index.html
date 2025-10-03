@@ -160,15 +160,15 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`,
   };
 
   const AUDIO_MAP={
-    'miss-me':'./audio/miss-me.mp3',
-    'are-sad':'./audio/are-sad.mp3',
-    'feel-lonely':'./audio/feel-lonely.mp3',
-    'are-angry':'./audio/are-angry.mp3',
-    'cant-sleep':'./audio/cant-sleep.mp3',
-    'want-a-smile':'./audio/want-a-smile.mp3',
-    'wake-up':'./audio/wake-up.mp3',
-    'sick':'./audio/sick.mp3',
-    'need-me':'./audio/need-me.mp3'
+    'miss-me':'miss-me.mp3',
+    'are-sad':'are-sad.mp3',
+    'feel-lonely':'feel-lonely.mp3',
+    'are-angry':'are-angry.mp3',
+    'cant-sleep':'cant-sleep.mp3',
+    'want-a-smile':'want-a-smile.mp3',
+    'wake-up':'wake-up.mp3',
+    'sick':'sick.mp3',
+    'need-me':'need-me.mp3'
   };
   const PLAY_LABEL='▶ Дууг тоглуулах';
   const PAUSE_LABEL='⏸ Дууг түр зогсоох';
@@ -211,14 +211,36 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`,
   const beat=$('#beat');
 
   let currentItem=null;
+  function candidatesFor(key){
+    const mapped=AUDIO_MAP[key]||`${key}.mp3`;
+    const base=mapped.split('/').pop();
+    return [
+      `./audio/${base}`,
+      `./${base}`,
+      `./audio/${key}.mp3`,
+      `./${key}.mp3`
+    ];
+  }
+  function setBeatSrcSequential(list){
+    let i=0; audioBtn.style.display='none';
+    beat.onerror=null; beat.onloadeddata=null;
+    function tryNext(){
+      if(i>=list.length){ audioBtn.style.display='none'; return; }
+      const src=list[i++];
+      beat.src=src; beat.load();
+    }
+    beat.onloadeddata=()=>{ audioBtn.style.display='inline-flex'; };
+    beat.onerror=()=>{ tryNext(); };
+    tryNext();
+  }
   function openPoem(item){
     poemTitle.textContent=`Чи минь ${item.label}`;
     poemBody.textContent=item.poem;
     moodChip.textContent=`Чи минь ${item.label}`;
     actionBtn.textContent=item.action;
-    const src=AUDIO_MAP[item.key]||'';
-    beat.pause(); beat.currentTime=0; if(src) beat.src=src;
-    audioBtn.textContent=PLAY_LABEL; audioBtn.style.display='inline-flex';
+    beat.pause(); beat.currentTime=0;
+    setBeatSrcSequential(candidatesFor(item.key));
+    audioBtn.textContent=PLAY_LABEL;
     poemModal.classList.add('open'); confetti(40); currentItem=item;
   }
   $('#backBtn').addEventListener('click',()=>{ poemModal.classList.remove('open'); beat.pause(); beat.currentTime=0; audioBtn.textContent=PLAY_LABEL; });
