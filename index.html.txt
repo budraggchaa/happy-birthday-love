@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Invitation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="page1" class="page">
+    <h1>Сайн уу Эмүжээн, хамт болзоонд явж хоол идэх үү?</h1>
+    <button id="yesButton">Тийм</button>
+    <button id="noButton">Үгүй</button>
+  </div>
+
+  <div id="page2" class="page hidden">
+    <h1>Goyodoo za chmg zavtai uyed bolzoondoo yvay bi ym bodoj baiy. Yeayy so happyyyy!</h1>
+    <div id="fireworks"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
