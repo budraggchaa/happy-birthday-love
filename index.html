@@ -241,6 +241,19 @@
 
 /* Make the card float above the slideshow */
 #eras .card { position: relative; z-index: 2; background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); }
+/* Make ERAS background full-bleed like page 2 */
+#eras{ position:relative; padding:0; overflow:hidden; }          /* remove the 24px gutters */
+#eras-bg{ position:absolute; inset:0; z-index:0; }                /* true full-bleed layer */
+#eras-bg .slide{ background-size:cover; background-position:center; }
+
+/* keep the card floating above and reintroduce spacing around it */
+#eras .card{ position:relative; z-index:2; margin:24px; background:rgba(255,255,255,.15); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.35); border-radius:28px; }
+
+/* optional: same soft dark overlay as page 2 */
+#eras-bg::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.25));
+}
   </style>
 </head>
 <body>
