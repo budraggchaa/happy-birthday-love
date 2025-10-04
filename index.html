@@ -15,7 +15,7 @@
     html,body{height:100%; margin:0; padding:0;}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;cursor:none}
 
-    /* ✅ Fix white gap caused by canvases */
+    /* deed tald garj ireed baisan tsagaan zaig zasav */
     canvas#fx,
     canvas#spark {
       position: fixed;
@@ -24,7 +24,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      z-index: 0; /* keep behind everything */
+      z-index: 0; 
     }
 
     .screen{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
@@ -37,8 +37,8 @@
     .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.25))}
     .card{position:relative;z-index:2;backdrop-filter:blur(6px);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);border-radius:28px;box-shadow:var(--shadow);padding:28px;max-width:980px;width:100%}
     h1.title{font-family:'Marck Script',cursive;font-size:clamp(40px,8vw,92px);line-height:1;color:#fff;margin:0 0 12px;text-align:center;text-shadow:0 4px 30px rgba(0,0,0,.35)}
-    .subtitle{color:#fff;text-align:center;margin:0 0 24px;opacity:.95;font-weight:600}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--pink),var(--rose));color:#4b2b2b;border:none;border-radius:999px;padding:14px 22px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);text-decoration:none}
+    .subtitle{color:#fff;text-align:center;margin:0 0 24px;opacity:1;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--pink),var(--rose));color:#fff;border:none;border-radius:999px;padding:14px 22px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);text-decoration:none}
     .btn:hover{transform:translateY(-1px)}
     .pill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
     .pill{border-radius:999px;background:rgba(255,255,255,.85);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border:1px solid #fff;backdrop-filter:blur(4px);cursor:pointer;box-shadow:var(--shadow)}
@@ -49,7 +49,7 @@
     .chip{background:var(--blush);border:1px solid #fff;padding:6px 12px;border-radius:999px;font-weight:700}
     .poem{white-space:pre-line;font-size:18px;line-height:1.75}
     .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .ghost{background:transparent;border:1.5px solid rgba(0,0,0,.1)}
+    .ghost{background:transparent;border:1.5px solid rgba(255,255,255,.1)}
     .footer{margin-top:18px;opacity:.7;font-size:14px}
     .heart{width:22px;height:22px;display:inline-block;background:radial-gradient(circle at 30% 30%, #fff, #ffd4e1 40%, #ff9bb8);clip-path:path('M12 21s-7.5-4.35-10-9.5S3.5 1 7 5c1.65 1.8 2.4 3 5 0 3.5-4 10-1 5 6.5S12 21 12 21Z')}
     .hidden{display:none}
@@ -68,12 +68,12 @@
     @keyframes cloudRight{to{transform:translateX(40vw);opacity:.95}}
     @keyframes bloom{0%{transform:scale(0);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
 
-    /* sparkling heart cursor */
+    /* zurhen cursosr */
     #cursorHeart{position:fixed;left:0;top:0;transform:translate(-50%,-50%);font-size:24px;z-index:60;pointer-events:none;filter:drop-shadow(0 4px 10px rgba(255,0,90,.35))}
     .spark{position:fixed;will-change:transform,opacity;pointer-events:none;font-size:10px;opacity:.9;z-index:59;animation:sparkOut .9s ease-out forwards}
     @keyframes sparkOut{to{transform:translateY(-20px) scale(1.2);opacity:0}}
 
-    /* small mute button */
+    /* duu haadag tovch */
     .mute{position:fixed;right:14px;bottom:14px;z-index:61}
   </style>
 </head>
@@ -92,9 +92,6 @@
       <button class="btn ghost" id="pulseHeart" aria-label="heart">❤</button>
     </div>
   </section>
-  <!-- rest of your HTML unchanged -->
-</body>
-</html>
 
   <section class="screen" id="when" style="background:linear-gradient(180deg, var(--blush), #fff)">
     <div class="card">
@@ -125,7 +122,7 @@
     </div>
   </div>
 
-  <!-- BGMs -->
+  <!-- ariin duunuud-->
   <audio id="bgHome" loop preload="metadata">
     <source src="home-bgm.mp3" type="audio/mpeg" />
   </audio>
@@ -133,10 +130,10 @@
     <source src="when-bgm.mp3" type="audio/mpeg" />
   </audio>
 
-  <!-- Effect + per-mood audio (existing) -->
+
   <audio id="beat" preload="metadata"></audio>
 
-  <!-- sparkling cursor element -->
+  <!-- szurhen cursoriin elemen -->
   <div id="cursorHeart">❤</div>
   <button class="btn mute" id="muteToggle">🔈</button>
 
@@ -144,7 +141,7 @@
   const CONFIG={
     photos:["bday-1.jpg","bday-2.jpg","bday-3.jpg"],
     hubItems:[
-      {key:"miss-me",label:"намайг санах",action:"Зүрхийг дарж тэврэлтийг мэдэр",poem:`Сайн уу хайрт минь. Энэ захидлыг уншиж байгаа өглөө, өдөр, оройн мэндийг хүргэе.
+      {key:"miss-me",label:"намайг санавал",action:"Зүрхийг дарж тэврэлтийг мэдэр",poem:`Сайн уу хайрт минь. Энэ захидлыг уншиж байгаа өглөө, өдөр, оройн мэндийг хүргэе.
 Үүнийг уншиж байна гэдэг нь өнөөдөр чи минь намайг их л санасан бололтой.
 Намайг санах бүртээ үүнийг санаарай: чи бид хоёр хэдий хамт байхгүй байгаа ч бид нэг тэнгэрийг өдөр бүр харж,
 зүрхний цохилт бүрт минь чи байгаа гэдгийг санаарай.
@@ -152,20 +149,20 @@
 цааш хичээх эрч хүчийг надад өгдөг юм шүү.
 Би ч гэсэн чамайгаа үнэхээр их санаж байна, үүнийг уншиж байх үед чинь ч санасаар л байгаа.
 Хайртай шүү, Тачмаанаа <3.`},
-      {key:"are-sad",label:"гуниглах",action:"3 секунд дарж цэцэглүүл",poem:`Хайраа, амьдрал хааяа үнэхээр л новшийн байдаг. Юу ч болж бүтэхгүй байгаа юм шиг, би л болохгүй байгаа юм шиг өчнөөн зүйл тохиолдох үе бий.
+      {key:"are-sad",label:"гуниглавал",action:"3 секунд дарж цэцэглүүл",poem:`Хайраа, амьдрал хааяа үнэхээр л новшийн байдаг. Юу ч болж бүтэхгүй байгаа юм шиг, би л болохгүй байгаа юм шиг өчнөөн зүйл тохиолдох үе бий.
 Гэхдээ гуниг гутрал бол зүгээр л борооны үүл шиг.
 Аянга цахилгаантай хав хар үүлнүүд хүртэл нарыг гарч ирэхийг зогсоож чаддаггүй шүү дээ.
 Хэрэв нар гарахгүй бол би нар болоод гуниг гутралыг чинь арилгая,
 чамд гэсэн хайраараа аз жаргалтай өдрүүд ирж байгааг өдөр бүр мэдрүүлж байя.
 Хэрэв надад чадал нь байвал нулимс бүрийн дуслыг нь цуглуулж, од болгон хувиргая.
 Тэгж чадвал гуниг нь хүртэл харанхуйг гэрэлтүүлнэ шүү дээ.`},
-      {key:"feel-lonely",label:"ганцаардах",action:"Өрөөг гэрэлтүүл",poem:`Амьдралын утга учир минь ээ. Чи минь ганцаараа биш шүү дээ.
+      {key:"feel-lonely",label:"ганцаардвал",action:"Өрөөг гэрэлтүүл",poem:`Амьдралын утга учир минь ээ. Чи минь ганцаараа биш шүү дээ.
 Хэрэв үнэхээр л ганцаараа юм шиг санагдаад, хүмүүс байгаа ч байхгүй юм шиг мэдрэгдэж байвал,
 нүдээ аниад намайг хажууд чинь байгаа мэтээр төсөөлөөрэй, хайрт минь.
 Гарыг нь чанга атгаад, мөрийг нь зөөлөн товшоод л…
 Чи минь ганцаараа биш ээ. Явсан газар бүрт нь чамайгаа гэсэн сэтгэл минь хамт байгаа гэдгийг санаарай.
 Хайртай шүү.`},
-      {key:"are-angry",label:"уурлах",action:"Нар гаргая",poem:`Babi, уурлах олон шалтгаан байгаа л даа. Би ч бас яагаад чи минь одоо уурлаж байгааг сайн мэдэхгүй л байна.
+      {key:"are-angry",label:"ууралвал",action:"Нар гаргая",poem:`Babi, уурлах олон шалтгаан байгаа л даа. Би ч бас яагаад чи минь одоо уурлаж байгааг сайн мэдэхгүй л байна.
 Магадгүй ажил дээр янз бүрийн зүйл болсон байх, сонин үйлчлүүлэгч ч юм уу, эсвэл менежер ч юм уу,
 бүр гэрийнхэн эсвэл найзуудынх нь хэн нэгнээс болсон ч байж магадгүй.
 Гэхдээ хайраа, дотор нь юу ч болж байсан, яаж ч уур нь буцалж байсан надтай ярьж болно шүү.
@@ -174,14 +171,14 @@
 Зүгээр л дотроо үхчихсэн хүн биш гэдгийг илтгэж байгаа хэрэг.
 Яаж ч уурласан, юуг ч үзэн ядсан байсан
 Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`},
-      {key:"cant-sleep",label:"нойр нь хүрэхгүй байх",action:"Од тоолоё",poem:`Хэрэв унтах шаардлагатай ч нойр нь хүрэхгүй байвал
+      {key:"cant-sleep",label:"нойр нь хүрэхгүй байвал",action:"Од тоолоё",poem:`Хэрэв унтах шаардлагатай ч нойр нь хүрэхгүй байвал
 намайг хажууд нь хэвтэж байгаа мэтээр төсөөлөөрэй.
 Тэврүүлээд, зүрхний минь цохилтыг мэдрээд, миний үнэрийг үнэрлээд,
 хамтдаа хонь тоолж байна гэж бодоорой.
 Хоёулаа хэд ч хүртэл тоолж болно доо…
 Гэхдээ 20 хүрээд л унтах байх аа.
 Сайхан амраарай, гүнж минь.`},
-      {key:"want-a-smile",label:"инээмсэглэхийг хүсэх",action:"Инээмсэглээрэй",poem:`“Чи юу идээд байгаан, хэлээч амаа ангай” гэхээр чихэнд нь 
+      {key:"want-a-smile",label:"инээмсэглэхийг хүсвэл",action:"Инээмсэглээрэй",poem:`“Чи юу идээд байгаан, хэлээч амаа ангай” гэхээр чихэнд нь 
       сонсогдож байна уу, хайраа
 Хэрэв жаахан ч гэсэн инээмсэглэл хэрэгтэй бол миний чамайг инээлгэдэг байсан жижиг зүйлсийг санаарай.
 Амьдрал хэцүү байсан ч би чинийхээ үргэлж мишээх шалтгаан нь байхыг хичээнээ.
@@ -189,7 +186,7 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
       {key:"wake-up",label:"дөнгөж сэрээд",action:"Гэгээн Өглөө",poem:`Өглөөний мэнд, хайрт минь. Би яг одоо магадгүй унтаж байгаа эсвэл аль хэдийн сэрчихсэн, хорвоогийн хаа нэгтээ Хятад гэдэг улсаас өглөөний мэнд хүргэж л байгаа байх.
 Өглөө бүрийн миний эхний бодол чи минь байдаг шүү.
 Сэрэх шалтгаан минь болж өгдөгт баярлалаа.`},
-      {key:"sick",label:"өвдчихсөн үедээ",action:"Хурдан Эдгээрэй",poem:`Хэрэв би супер хүчтэй байсан бол бүх өвдөлтийг чинь аваад шидчихмээр санагдах юм.
+      {key:"sick",label:"өвдсөн үедээ",action:"Хурдан Эдгээрэй",poem:`Хэрэв би супер хүчтэй байсан бол бүх өвдөлтийг чинь аваад шидчихмээр санагдах юм.
 Чамайгаа гунигтай, өвдчихсөн байхыг харах миний хувьд хамгийн хэцүү зүйл минь шүү .
 Надад ид шид байхгүй тул эдгэртэл нь халамж, хайр л өгч чадахаар байна даа Babi.`},
       {key:"need-me",label:"хэрэв би хэрэг болвол",action:"Намайг дуудаарай",poem:`Хэрэв миний хэрэг болвол юу ч бодолгүй залгаарай, Babi.
@@ -272,13 +269,13 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
   pulseHeart.addEventListener('mouseleave',cancelPress);
   pulseHeart.addEventListener('touchend',cancelPress);
 
-  // smooth scroll
+  
   document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
   const poemModal=document.getElementById('poemModal');
   poemModal.addEventListener('click',e=>{if(e.target===poemModal) poemModal.classList.remove('open')});
   addEventListener('keydown',e=>{if(e.key==='Escape') poemModal.classList.remove('open')});
 
-  // sparkling heart cursor
+  // zurhen cursor
   const cursorHeart=document.getElementById('cursorHeart');
   let cx=window.innerWidth/2, cy=window.innerHeight/2;
   addEventListener('mousemove',e=>{
@@ -292,7 +289,7 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
     setTimeout(()=>s.remove(),900);
   },{passive:true});
 
-  // background music logic
+  // ard yvah duu
   function setMuted(m){muted=m;[bgHome,bgWhen,beat].forEach(a=>{a.muted=muted});muteToggle.textContent=muted?'🔇':'🔈'}
   function playHome(){if(!muted){bgWhen.pause();bgHome.currentTime=0;bgHome.play().catch(()=>{});} }
   function playWhen(){if(!muted){bgHome.pause();bgWhen.currentTime=0;bgWhen.play().catch(()=>{});} }
