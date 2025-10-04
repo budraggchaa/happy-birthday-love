@@ -492,7 +492,11 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
         era.songs.forEach((s,i)=>{
           const row=document.createElement('div');
           row.className='song';
-          row.innerHTML=`<b>${i+1}. ${s.title}</b><audio controls preload="none" src="${s.file}"></audio>`;
+row.innerHTML=`
+  <b>${s.title}</b>
+  <button class="song-play" aria-label="Тоглуулах">▶</button>
+  <audio preload="none" src="${s.file}"></audio>
+`;
           card.appendChild(row);
         });
         erasGrid.appendChild(card);
