@@ -75,6 +75,22 @@
 
     /* duu haadag tovch */
     .mute{position:fixed;right:14px;bottom:14px;z-index:61}
+    @keyframes bloom{0%{transform:scale(0);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+
+    /* Make the back and audio buttons visible */
+    #backBtn, #audioBtn {
+      color: #ff4d7a !important;
+      border-color: #ff4d7a !important;
+      background: rgba(255, 255, 255, 0.85) !important;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,.1);
+    }
+
+    #backBtn:hover, #audioBtn:hover {
+      background: #ff4d7a !important;
+      color: #fff !important;
+      transform: scale(1.03);
+    }
   </style>
 </head>
 <body>
