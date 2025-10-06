@@ -316,6 +316,45 @@
   z-index: -1;
   pointer-events: none;  /* ✅ ensures clicks go through */
 }
+/* 🎵 Fancy song play button for ERAS */
+.song-play {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff3d6e, #ff9bb8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 61, 110, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.song-play:hover {
+  transform: scale(1.15);
+  box-shadow: 0 8px 18px rgba(255, 61, 110, 0.6);
+}
+
+.song-play::after {
+  content: "";
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,61,110,0.25);
+  animation: pulse 1.5s infinite;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
 
   </style>
 </head>
@@ -608,7 +647,7 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
           row.className='song';
 row.innerHTML=`
   <b>${s.title}</b>
-  <button class="play-btn" aria-label="Тоглуулах">▶</button>
+  <button class="song-play" aria-label="Тоглуулах">▶</button>
   <audio preload="none" src="${s.file}"></audio>
 `;
           card.appendChild(row);
