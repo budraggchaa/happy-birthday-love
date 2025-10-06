@@ -74,12 +74,25 @@
     #cursorHeart{position:fixed;left:0;top:0;transform:translate(-50%,-50%);font-size:24px;z-index:60;pointer-events:none;filter:drop-shadow(0 4px 10px rgba(255, 0, 89, 0.813))}
     .spark{position:fixed;will-change:transform,opacity;pointer-events:none;font-size:10px;opacity:.9;z-index:59;animation:sparkOut .9s ease-out forwards}
     @keyframes sparkOut{to{transform:translateY(-20px) scale(1.2);opacity:0}}
+    #cursorHeart {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(255, 0, 89, 0.8));
+}
 
-    /* duu haadag tovch */
+#cursorHeart img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+    
     .mute{position:fixed;right:14px;bottom:14px;z-index:61}
     @keyframes bloom{0%{transform:scale(0);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
 
-    /* Make the back and audio buttons visible */
     #backBtn, #audioBtn {
       color: #ff4d7a !important;
       border-color: #ff4d7a !important;
@@ -239,18 +252,11 @@
   40% { opacity: 0; }
   100% { opacity: 0; }
 }
-
-/* Make the card float above the slideshow */
 #eras .card { position: relative; z-index: 2; background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); }
-/* Make ERAS background full-bleed like page 2 */
-#eras{ position:relative; padding:0; overflow:hidden; }          /* remove the 24px gutters */
-#eras-bg{ position:absolute; inset:0; z-index:0; }                /* true full-bleed layer */
+#eras{ position:relative; padding:0; overflow:hidden; }         
+#eras-bg{ position:absolute; inset:0; z-index:0; }              
 #eras-bg .slide{ background-size:cover; background-position:center; }
-
-/* keep the card floating above and reintroduce spacing around it */
 #eras .card{ position:relative; z-index:2; margin:24px; background:rgba(255,255,255,.15); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.35); border-radius:28px; }
-
-/* optional: same soft dark overlay as page 2 */
 #eras-bg::after{
   content:""; position:absolute; inset:0;
   background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.25));
@@ -268,7 +274,6 @@
   .btn { width: 100%; justify-content: center; }
   .pill { width: 100%; }
 }
-/* 🎵 Fancy Play Button */
 .play-btn {
   position: relative;
   width: 70px;
@@ -356,10 +361,10 @@
   0% { transform: scale(1); opacity: 0.6; }
   100% { transform: scale(1.8); opacity: 0; }
 }
-/* 📱 Mobile fixes */
+
 @media (max-width: 768px) {
   .hdr h2 { 
-    font-size: 20px;   /* smaller title */
+    font-size: 20px;   
     line-height: 1.3;
   }
 
@@ -488,7 +493,10 @@
   <audio id="beat" preload="metadata"></audio>
 
   <!-- szurhen cursoriin elemen -->
-  <div id="cursorHeart">❣️</div>
+ <!-- cursor element (keep this before your scripts) -->
+<div id="cursorHeart">
+ <img src="kissing-face.png" alt="kiss cursor" />
+</div>
   <button class="btn mute" id="muteToggle">🔈</button>
 
   <script>
