@@ -553,6 +553,10 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
       {key:"need-me",label:"хэрэв би хэрэг болвол",action:"Намайг дуудаарай",poem:`Хэрэв миний хэрэг болвол юу ч бодолгүй залгаарай, Babi.
 Чадах бүхнээрээ туслахыг хичээнэшүү.
 Боломж байвал нүд ирмэх төдийд л хажууд чинь байхыг хичээнэ.`}
+,
+      {key:"soul-words",label:"Cэтгэлийн үгс",action:"Love You",poem:`Яг хэлмээр байгаа зүйлсээ Монголоор хэлэх гэхээр нэг ичмээр байгаад болдоггүй ээ, хэхэ
+      Falling for you was never part of my plan, it just happened, quietly, like... the universe decided for me. And somehow it became the most beautiful thing that
+      ever happened in my life. Every second apart from you only reminds me how deeply your presence fills my heart. I love you with every piece of who I am, in this life and that come after. Even when the world forgets our names, my heart will still remember you. Thank you for walking into my life filling with laughter till my cheeks hurt. Painting my world with colors I never knew existed, and for helping me become a better version of myself just by being you. `}
     ]
   };
   
@@ -582,19 +586,51 @@ Babi н энд байж л байгаа шүү, үргэлж нээлттэй.`}
   }
   buildBgGrid();
 
-  const hub=document.getElementById('hub');
-  CONFIG.hubItems.forEach(item=>{const el=document.createElement('button');el.className='pill';el.innerHTML=`<span>— <b>Чи минь ${item.label}</b></span> <small>нээх</small>`;el.addEventListener('click',()=>openPoem(item));hub.appendChild(el)});
+  const hub = document.getElementById('hub');
 
-  function openPoem(item){
-    currentItem=item;
-    document.getElementById('poemTitle').textContent=`Чи минь ${item.label}`;
-    document.getElementById('poemBody').textContent=item.poem;
-    document.getElementById('moodChip').textContent=`Чи минь ${item.label}`;
-    document.getElementById('actionBtn').textContent=item.action;
-    const audioFile=AUDIO_MAP[item.key];
-    if(audioFile){beat.src=audioFile;audioBtn.style.display='inline-flex';audioBtn.textContent=PLAY_LABEL;}else{audioBtn.style.display='none'}
-    document.getElementById('poemModal').classList.add('open');
+CONFIG.hubItems.forEach(item => {
+  const el = document.createElement('button');
+  el.className = 'pill';
+
+  const isSoul =
+    item.key === 'soul-words' ||
+    item.key === 'setgeliin-ugs' ||
+    (item.label && item.label.trim() === 'сэтгэлийн үгс');
+
+  const labelText = isSoul
+    ? `— <b>${item.label}</b>`
+    : `— <b>Чи минь ${item.label}</b>`;
+
+  el.innerHTML = `${labelText} <small>нээх</small>`;
+  el.addEventListener('click', () => openPoem(item));
+  hub.appendChild(el);
+});
+function openPoem(item){
+  currentItem = item;
+  // Hide the "Чи минь" prefix only for the "сэтгэлийн үгс" pill
+  const noPrefix =
+    item.key === 'soul-words' ||               // if you used this key
+    item.key === 'setgeliin-ugs' ||            // or maybe this key
+    (item.label && item.label.trim() === 'сэтгэлийн үгс'); // fallback by label
+
+  const title = noPrefix ? item.label : `Чи минь ${item.label}`;
+
+  document.getElementById('poemTitle').textContent = title;
+  document.getElementById('poemBody').textContent  = item.poem;
+  document.getElementById('moodChip').textContent  = title;
+  document.getElementById('actionBtn').textContent = item.action;
+
+  const audioFile = AUDIO_MAP[item.key];
+  if (audioFile) {
+    beat.src = audioFile;
+    audioBtn.style.display = 'inline-flex';
+    audioBtn.textContent = PLAY_LABEL;
+  } else {
+    audioBtn.style.display = 'none';
   }
+
+  document.getElementById('poemModal').classList.add('open');
+}
 
   document.getElementById('backBtn').addEventListener('click',()=>{beat.pause();beat.currentTime=0;document.getElementById('poemModal').classList.remove('open')});
 
