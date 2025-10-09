@@ -404,8 +404,9 @@
     font-size: 14px;
   }
 }
-
-
+html, body { height:100%; overflow:hidden; }
+.screen { display:none; min-height:100vh; }
+.screen.active { display:flex; }               
   </style>
 </head>
 <body>
@@ -667,8 +668,6 @@ function openPoem(item){
   pulseHeart.addEventListener('mouseleave',cancelPress);
   pulseHeart.addEventListener('touchend',cancelPress);
 
-  
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
   const poemModal=document.getElementById('poemModal');
   poemModal.addEventListener('click',e=>{if(e.target===poemModal) poemModal.classList.remove('open')});
   addEventListener('keydown',e=>{if(e.key==='Escape') poemModal.classList.remove('open')});
@@ -782,7 +781,35 @@ row.innerHTML=`
     if(btn) btn.textContent='▶';
   }, true);
 })();
+// show only the active "page"
+const PAGES=['home','when','eras'];
+function showPage(id){
+  PAGES.forEach(p=>{
+    const el=document.getElementById(p);
+    if (el) el.classList.toggle('active', p===id);
+  });
+}
 
+// choose BGM based on the hash
+function syncBgmToHash(){
+  const h=(location.hash||'#home').slice(1);
+  if(h==='when')      playWhen();
+  else if(h==='eras') playEras();
+  else                playHome();
+}
+
+// route on load + hash changes
+function syncRoute(){
+  const h=(location.hash||'#home').slice(1);
+  const page = PAGES.includes(h) ? h : 'home';
+  showPage(page);
+  if (userInteracted) syncBgmToHash();
+}
+window.addEventListener('hashchange', syncRoute);
+document.addEventListener('DOMContentLoaded', ()=>{
+  if(!location.hash) location.hash='#home';
+  else syncRoute();
+});
     </script>
     
 </body>
