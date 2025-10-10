@@ -493,6 +493,16 @@ html, body { height:100%; overflow:hidden; }
   display: none !important;
   content: none !important;
 }
+/* Story overlay text */
+.story-caption{
+  position:absolute;left:50%;bottom:24px;transform:translateX(-50%);
+  background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);
+  padding:10px 14px;border-radius:14px;max-width:min(90vw,780px);
+  font-weight:600;backdrop-filter:blur(6px)
+}
+.story-fade{animation:storyFade .5s ease}
+@keyframes storyFade{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
 </style>
 </head>
 <body>
@@ -505,6 +515,7 @@ html, body { height:100%; overflow:hidden; }
       <p class="subtitle">Энэхүү интернетийн бяцхан буланг хамгаас хайртай чамдаа зориулав</p>
       <a href="#when" class="btn" id="openHub"> <span class="heart"></span> Бэлгээ нээх</a>
       <a href="#eras" class="btn" id="openEras">✨ Дурсамжтай мөчүүд</a >
+      <a href="tuuh.html" class="btn ghost" id="openStory">✨ Бидний түүх</a >
       <div style="height:10px"></div>
       <div class="tip">Доорх зүрхийг удаан дарвал зүрхэн бороо орно ✨</div>
       <div style="height:12px"></div>
@@ -566,7 +577,6 @@ html, body { height:100%; overflow:hidden; }
       <div class="eras-grid" id="erasGrid"></div>
       <div class="footer">Хайртай шүү. <span class="heart"></span></div>
     </div>
-    
   </section>
   <div class="modal" id="poemModal" role="dialog" aria-modal="true" aria-labelledby="poemTitle">
     <div class="inner">
@@ -587,6 +597,8 @@ html, body { height:100%; overflow:hidden; }
     </div>
   </div>
   </section>
+</section>
+
   <!-- ariin duunuud-->
   <audio id="bgHome" loop preload="metadata">
     <source src="home-bgm.mp3" type="audio/mpeg" />
@@ -606,7 +618,23 @@ html, body { height:100%; overflow:hidden; }
  <img src="kissing-face.png" alt="kiss cursor" />
 </div>
   <button class="btn mute" id="muteToggle">🔈</button>
-
+    <section class="screen" id="story" style="background:linear-gradient(180deg,#0b0b25,#1a1430)">
+      <div class="card" style="max-width:1000px">
+        <div class="hdr" style="justify-content:space-between;align-items:center">
+          <span class="chip">Пиксел түүх</span>
+          <small style="opacity:.8">Right-click → Дараагийн хэсэг • Double-click ← Өмнөх</small>
+        </div>
+    
+        <div style="background:#000;border-radius:16px;padding:10px">
+          <canvas id="storyCanvas" width="896" height="504" style="width:100%;height:auto;display:block;border-radius:10px"></canvas>
+        </div>
+    
+        <div class="nav" style="justify-content:center;margin-top:12px">
+          <a href=" " class="btn ghost">← Буцах</a >
+        </div>
+      </div>
+    </section>
+  </section>
   <script>
   const CONFIG={
     photos:["bday-1.jpg","bday-2.jpg","bday-3.jpg"],
@@ -1005,5 +1033,141 @@ document.addEventListener('DOMContentLoaded', ()=>{
     checkboxes.forEach(cb => cb.addEventListener('change', updateBottle));
     updateBottle();
     </script>
+    <script>
+      function openPage(id) {
+  document.querySelectorAll('section').forEach(sec => sec.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+      (()=>{
+      // --------- assets you’ll drop in /px ------------
+      const PX = (n)=>`px/${n}`;
+      /* Put PNGs you’ll paint later with these filenames.
+         It’s OK if some are missing: we show a gradient fallback. */
+      const SCENES = [
+        // 0 — Follow (night, IG follow button)
+        { bg: PX('01_story_bg.png'), people: PX('01_story_people.png'),
+          phone: PX('02_phone_follow.png'),
+          caption: 'Нэг найзынхаа story-оор чамайг харсан. Хэтэрхий хөөрхөн. Шөнө орой дагалаа…' },
+      
+        // 1 — Followed back
+        { bg: PX('01_story_bg.png'), phone: PX('03_phone_followback.png'),
+          caption: 'Өглөө нь—boom—дагаллаа.' },
+      
+        // 2 — First text
+        { bg: PX('01_story_bg.png'), phone: PX('04_phone_text.png'),
+          caption: 'Удаан бодсоор “Ni hao fine shyt” гэж бичсэн, тэгээд чат… чат… чат…' },
+      
+        // 3 — First meet IRL
+        { bg: PX('05_meet_bg.png'), people: PX('05_meet_us.png'),
+          caption: 'Анх уулзахад… улам хөөрхөн. Үнэр нь диваажин. Би аймшигтай ичиж, гар хөлөрсөн ч их ярилцсан.' },
+      
+        // 4 — First date (rose + movie + first hand-hold)
+        { bg: PX('06_date_bg.png'), people: PX('06_date_us.png'),
+          caption: 'Эхний болзоо—сарнай барьж, кино үзээд, анх удаа гарнаас нь атгасан.' },
+      
+        // 5 — “Be my girlfriend?”
+        { bg: PX('07_official_bg.png'), people: PX('07_official_us.png'),
+          caption: '1 сарын дараа: “Надайг найз охин минь болох уу?”… “Тийм.”' },
+      
+        // 6 — Distance creeping in
+        { bg: PX('08_distance_bg.png'), people: PX('08_distance_us.png'),
+          caption: 'Хятадад буцах өдөр дөхөв. Тэр асуудалтай, би тэнэгээр дурандаа зай завсар оруулсан.' },
+      
+        // 7 — Breakup
+        { bg: PX('09_breakup_bg.png'), people: PX('09_breakup_us.png'),
+          caption: 'Нислэгийнхээ өмнөх өдөр… бид салсан.' },
+      
+        // 8 — Lock screen at night (message appears)
+        { bg: PX('01_story_bg.png'), phone: PX('10_phone_hi.png'),
+          caption: '2 долоо хоног өөрийгөө сатааруулж явтал… Шөнө утас асав: “hi… би чамайг саналаа”.' },
+      
+        // 9 — Reconnecting
+        { bg: PX('01_story_bg.png'), phone: PX('04_phone_text.png'),
+          caption: 'Дахиад ярилцаж эхэллээ. Ойртсоор…' },
+      
+        // 10 — She visits China
+        { bg: PX('11_china_bg.png'), people: PX('11_china_us.png'),
+          caption: 'Удалгүй тэр над дээр Хятаддаа ирсэн.' },
+      
+        // 11 — First sleep together / cuddle
+        { bg: PX('12_cuddle_bg.png'), people: PX('12_cuddle_us.png'),
+          caption: 'Буцахын өмнө анх удаа тэврэлдээд хамт унтсан—хайр яг энд байсан.' },
+      
+        // 12 — Ongoing
+        { bg: PX('01_story_bg.png'),
+          caption: 'Түүх үргэлжилж байна… бид LDR ч зүрхнүүд маань нэгэн хэмнэлтэй. ♥' }
+      ];
+      
+      // --------- canvas boot ----------
+      const cvs = document.getElementById('storyCanvas');
+      const ctx = cvs.getContext('2d');
+      
+      const cache = new Map();
+      function load(src){
+        if(!src) return Promise.resolve(null);
+        if(cache.has(src)) return cache.get(src);
+        const p = new Promise((res)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=src;});
+        cache.set(src,p); return p;
+      }
+      
+      let idx = 0, fading = false;
+      
+      function drawGradient(){
+        const g = ctx.createLinearGradient(0,0,0,cvs.height);
+        g.addColorStop(0,'#141427'); g.addColorStop(1,'#221833');
+        ctx.fillStyle = g; ctx.fillRect(0,0,cvs.width,cvs.height);
+      }
+      
+      function render(i=idx,fromZero=false){
+        idx=i; drawGradient();
+        const sc = SCENES[idx];
+        Promise.all([load(sc.bg), load(sc.people), load(sc.phone)]).then(([bg,people,phone])=>{
+          if(bg) ctx.drawImage(bg,0,0,cvs.width,cvs.height);
+          if(people) ctx.drawImage(people,0,0,cvs.width,cvs.height);
+          if(phone) ctx.drawImage(phone,0,0,cvs.width,cvs.height);
+          showCaption(sc.caption, fromZero);
+        });
+      }
+      
+      let cap;
+      function showCaption(text, fresh){
+        if(cap) cap.remove();
+        cap = document.createElement('div');
+        cap.className = 'story-caption'+(fresh?' story-fade':'');
+        cap.textContent = text;
+        document.getElementById('story').appendChild(cap);
+      }
+      
+      function next(){
+        if(fading) return;
+        fading = true;
+        let n = (idx+1<SCENES.length)? idx+1 : idx;
+        render(n,true); setTimeout(()=>fading=false, 250);
+      }
+      function prev(){
+        if(fading) return;
+        fading = true;
+        let p = (idx-1>=0)? idx-1 : 0;
+        render(p,true); setTimeout(()=>fading=false, 250);
+      }
+      
+      // right-click → next (prevent context menu)
+      cvs.addEventListener('contextmenu', e=>{e.preventDefault(); next();});
+      // double-click → previous
+      cvs.addEventListener('dblclick', e=>{e.preventDefault(); prev();});
+      
+      // start when we land on #story
+      function maybeStart(){
+        if(location.hash==='#story') render(0,true);
+      }
+      window.addEventListener('hashchange', maybeStart);
+      maybeStart();
+      })();
+      function openPage(id) {
+  document.querySelectorAll('section').forEach(sec => sec.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+
+      </script>
 </body>
 </html>

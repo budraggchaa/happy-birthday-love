@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бидний түүх</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2b2333;--rose:#ff9bb8;--pink:#ffc0d3;--cream:#fff6fb;--glass:rgba(255,255,255,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:#0d0a12;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+    overflow:hidden; /* full-scene */
+  }
+
+  /* Stage */
+  .stage{position:relative;width:100vw;height:100vh;isolation:isolate}
+  .bg, .chars, .ui{position:absolute;inset:0}
+  .bg{overflow:hidden}
+  .bg img{position:absolute;inset:0;margin:auto;min-width:100%;min-height:100%;
+    image-rendering:pixelated;filter:contrast(1.05) saturate(1.05) brightness(.95);transform:scale(1.02)}
+  .chars{pointer-events:none}
+  .sprite{position:absolute;image-rendering:pixelated}
+  .sprite.you{z-index:2}
+  .sprite.her{z-index:3}
+  .fade{animation:fade .5s ease}
+  @keyframes fade{from{opacity:0;transform:scale(1.01)}to{opacity:1}}
+
+  /* Caption */
+  .caption{
+    position:absolute;left:50%;bottom:28px;transform:translateX(-50%);
+    background:var(--glass);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.35);border-radius:16px;padding:14px 16px;max-width:min(860px,90vw);
+    box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:16px;line-height:1.6
+  }
+  .step{font-family:"Press Start 2P", monospace;font-size:12px;letter-spacing:.5px;color:#ffe3ec}
+
+  /* HUD */
+  .hud{
+    position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;
+    font-size:12px;opacity:.9
+  }
+  .pill{background:var(--glass);border:1px solid rgba(255,255,255,.35);padding:8px 12px;border-radius:999px}
+  .controls{display:flex;gap:8px}
+  .controls .pill{cursor:default}
+
+  /* Phone popover */
+  .phone{
+    position:absolute;right:24px;top:24px;width:min(280px,40vw);aspect-ratio:9/19;border-radius:24px;background:#111;
+    border:3px solid #222;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none;overflow:hidden;z-index:5
+  }
+  .phone.show{display:block;animation:pop .35s ease}
+  @keyframes pop{from{transform:translateY(-10px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+  .screen{position:absolute;inset:0;background:#0e0e13}
+  .igbar{height:42px;background:#1b1b23;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:12px}
+  .avatar{width:22px;height:22px;border-radius:50%;background:#fff}
+  .btn{margin-left:auto;background:linear-gradient(#ffd1e2,#ff9ec0);color:#3d2b2b;border:none;border-radius:999px;padding:6px 10px;font-weight:700;font-size:12px}
+  .notif{position:absolute;left:8px;right:8px;top:60px;background:#222;border:1px solid #333;border-radius:12px;padding:10px;color:#eee;font-size:12px}
+  .notif.follow{border-color:#2ec27e}
+  .notif.msg{border-color:#6aa3ff;top:110px}
+  .typing{width:8px;display:inline-block;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* Help tooltip */
+  .help{position:absolute;bottom:14px;right:14px;font-size:12px;opacity:.8}
+  .kbd{background:#2a2433;border:1px solid #3b3246;border-radius:6px;padding:4px 6px;margin:0 2px}
+
+  /* Scene progress dots */
+  .dots{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#ffffff40}
+  .dot.on{background:#ff9bb8}
+
+  /* Phone shell size (keeps tall 9:19 shape) */
+.phone{
+  width: 260px;           /* tweak if you want bigger/smaller */
+  aspect-ratio: 9 / 19;
+  border-radius: 22px;
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.25);
+  transform-origin: 50% 50%;
+}
+.ig-pixel {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  border-radius: 20px;
+}
+/* Example: place phone near upper-right of the stage */
+.phone{
+  position:absolute;
+  right: 8vw;
+  top:   8vh;
+}
+/* pop-in animation */
+@keyframes phonePop {
+  0%   { transform: scale(.86) translateY(12px); opacity: 0 }
+  60%  { transform: scale(1.04) translateY(0);   opacity: 1 }
+  100% { transform: scale(1);                    opacity: 1 }
+}
+.phone.pop-in{
+  animation: phonePop .6s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.phone .chat {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: #0b0b1a;
+  padding: 10px 10px 14px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 22px 1fr;
+  gap: 8px;
+  image-rendering: pixelated;
+  color: #d7d9ff;
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  font-size: 10px;
+}
+
+.phone .chat .status {
+  background: linear-gradient(180deg,#151735,#0b0b1a);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .5px;
+  color: #9aa2ff;
+}
+
+.phone .chat .thread {
+  overflow: hidden;
+  position: relative;
+}
+
+.phone .bubble {
+  display: inline-block;
+  max-width: 92%;
+  padding: 8px 10px;
+  border-radius: 12px;
+  margin: 6px 0;
+  line-height: 1.35;
+  color: #fff;
+  background: #2c2f6b;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.phone .bubble.me {
+  background: #ff2f87;
+  color: #fff;
+  justify-self: end;
+  margin-left: auto;
+}
+
+.phone .hint {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: #8a8eff;
+  opacity: .7;
+}
+.scene {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.scene.active {
+  opacity: 1;
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="bg"><img id="bg" alt="scene background"></div>
+  <div class="chars">
+    <img id="you" class="sprite you" alt="you">
+    <img id="her" class="sprite her" alt="her">
+  </div>
+
+  <div class="hud">
+    <div class="pill">Түүх үргэлжилж байна…</div>
+    <div class="controls">
+      <div class="pill">👉 Баруун товч — дараагийн</div>
+      <div class="pill">👆 Давхар товш — өмнөх</div>
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="caption" id="caption">
+    <div class="step" id="step">0/0</div>
+    <div id="text">Ачааллаж байна…</div>
+  </div>
+
+  <!-- phone popover for IG / message moments -->
+  <div class="phone" id="phone">
+    <div class="screen">
+        <div class="screen">
+            <img src="ig-follow-screen.png" alt="Instagram follow" class="ig-pixel" />
+          </div>
+      <div class="notif msg" id="msgNotif" style="display:none">“Ni hao fine shyt<span class="typing">|</span>”</div>
+    </div>
+  </div>
+
+  <div class="help">Хөтлөх: <span class="kbd">Right-click</span> / <span class="kbd">Double-click</span></div>
+</div>
+
+<script>
+    let index = 0;        // which scene you’re on
+let busy = false;     // prevents double actions
+const stage = document.getElementById('stage');
+
+// Dummy render function for testing
+function render(i){
+  if(i < 0) i = 0;
+  if(i >= scenes.length) i = scenes.length - 1;
+  index = i;
+  console.log("Scene:", index);
+  // you’ll later replace this with your real drawing / scene update logic
+}
+function next(){ if(busy) return; render(index+1); }
+function prev(){ if(busy) return; render(index-1); }
+
+// Inputs
+stage.addEventListener('contextmenu', e=>{ e.preventDefault(); next(); });
+stage.addEventListener('dblclick', e=>{ e.preventDefault(); prev(); });
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight' || e.key===' ') next();
+  if(e.key==='ArrowLeft' || e.key==='Backspace') prev();
+});
+
+// Responsive: keep 16:9 while filling width
+const ro = new ResizeObserver(()=>{
+  // nothing needed: aspect-ratio handles it
+});
+ro.observe(stage);
+/* =========================
+   1) ASSETS (replace files)
+   ========================= */
+const ASSETS = {
+  // Backgrounds (pixel art; 16:9 works great)
+  bg: [
+    "01_story_bg.gif",      // 0 — friend’s story night
+    "morning-room.gif",    // 1 — morning follow back
+    "bg-3-chat-room.png",       // 2 — texting
+    "first-meet.png",       // 3 — first meet
+    "first-date.png",// 4 — first date
+    "date.gif",     // 5 — ask to be GF
+    "china.png",      // 6 — before flight
+    "sad.gif",     // 7 — sad nights
+    "dorm.gif",    // 8 — phone lights up
+    "airport.png",     // 9 — China reunite
+    "hotel.png",         // 10 — first sleep together
+    "how.gif"             // 11 — LDR ongoing
+  ],
+  // Character sprites (you/her). You can also provide different files per scene inside SCENES below.
+  you: "you.png",
+  her: "her.png"
+};
+
+/* ==========================================
+   2) STORY SCENES (edit texts / positions)
+   ========================================== */
+const SCENES = [
+  {
+    bg: ASSETS.bg[0],
+    text: "Тэр бол найзын минь хамгийн сайн найз. Story дээрх зурган дээрээс анх харсан мөчөөс л дурласан, ямар хөөрхөн харагдаж байсан гэж санана.",
+    you: {x:"16%", y:"58%", w:160},
+    her: {x:"74%", y:"52%", w:150}
+  },
+  {
+    bg: ASSETS.bg[1],
+    text: "Хэд хоногийн дараа дагах товчийг удаан ширтсэний эцэст дарсан. Өглөө босоод хартал тэр ч бас намайг дагасан байлаа.",
+    phone: {mode:"follow"},
+    you: {x:"16%", y:"58%", w:160},
+  },
+  {
+    bg: ASSETS.bg[2],
+    text: "Ингээд анхны мессеж: “Ni hao fine shyt” сандарч сандарч бичтэл тэр ч бас хариу бичлээ … чат зогсолтгүй үргэлжилсэн.",
+    phone: {mode:"msg"},
+    you: {x:"16%", y:"58%", w:160},
+   
+  },
+  {
+    bg: ASSETS.bg[3],
+    text: "Эцэст нь уулзах өдөр ирлээ, тэр өөдөөс минь алхаад ирж байна, ямар хөөрхөн юм бэ? гэж бодсоор түүнрүү чиглэн алхлаа, үнэр нь хүртэл яаж ийм гоё байгаа юм бэ... Би ичингүйрэн ээрч муураад л, алга хөлөрсөн ч ярилцсаар.",
+    you: {x:"38%", y:"56%", w:170},
+    her: {x:"58%", y:"56%", w:170}
+  },
+  {
+    bg: ASSETS.bg[4],
+    text: "Эхний болзоо... Бид 2 кино үзэхээр болсон юм, гартаа нэг ширхэг сарнайтай гэрийх нь гадаа очлоо. Кино ч эхэллээ, кино эхлээд хэр удсан юм бүү мэд, гарыг нь анх удаа атгасан мөч зүрх түг..түг.. гар минь бага хөлрөнө шүү гэж бодсоор кино дууслаа .",
+    you: {x:"38%", y:"50%", w:175},
+    her: {x:"58%", y:"50%", w:175}
+  },
+  {
+    bg: ASSETS.bg[5],
+    text: "Сар өнгөрлөө, зориг гарган түүнээс “Надтай үерхээч?” гэж асуулаа, түүний царайнаас л шоконд орсон байгаа нь харагдаж байлаа. Тэр толгой дохилоо, би нүдэндээ ч итгэсэнгүй зэрэгцээд баярлаж ч байлаа. Гоё мөчийг минь үгүй хийсэн зүйл нь авсан байсан бөгж минь багадчихсан.",
+    you: {x:"40%", y:"48%", w:175},
+    her: {x:"60%", y:"48%", w:175}
+  },
+  {
+    bg: ASSETS.bg[6],
+    text: "Хятад руу буцах хугацаа өдөр ирэх тусам ойртсоор л. Тэр өөрийн асуудлуудтай тулгарч, би ч бас уулзах хүсэлдээ автан заримдаа орон зайнд нь халдаж байгаагаа ч мэдэхгүй ухаангүйтсэн… уг нь хамт байхыг л хүссэн юм",
+    you: {x:"46%", y:"48%", w:170},
+    her: {x:"54%", y:"48%", w:170}
+  },
+  {
+    bg: ASSETS.bg[7],
+    text: "Нислэгийн өмнөх шөнө — зүрх минь хоосров. бид 2 ярилцаад 2 тийш болохоор болов, би өөрийгөө ийм байдалд хүргэсэн гэж боддог. Тэгэхдээ би өөрчлөгдөх хэрэгтэйгээ ойлгож өөрийнхөө хамгийн BEST хувилбар болох гэж хичээв.",
+    you: {x:"16%", y:"48%", w:180},
+    her: null
+  },
+  {
+    bg: ASSETS.bg[8],
+    text: "Хоёр долоо хоног өнгөрлөө… орой утасанд минь зурвас ирэв. “Сайн уу….” түүнээс минь ирсэн байлаа, бид 2 ярилцаж эхэллээ. Эцэст нь бид буцаад хамтдаа боллоо. BEST DAY OF MY LIFE",
+    phone: {mode:"msg"},
+    you: {x:"20%", y:"50%", w:160},
+    her: null
+  },
+  {
+    bg: ASSETS.bg[9],
+    text: "Бид түүнээс хойш урьдын адил дахин бичилцэж, тун удалгүй Хятадад уулзлаа. Тэр минь Бээжингээр дамжин өөр хотруу явж байсан юм.",
+    you: {x:"42%", y:"55%", w:175},
+    her: {x:"50%", y:"55%", w:175}
+  },
+  {
+    bg: ASSETS.bg[10],
+    text: "Түүнийгээ буцахаас өмнө хамтдаа анх удаа хамт ярилцаж хоносон анхны шөнө.",
+    you: {x:"58%", y:"50%", w:180},
+    her: {x:"70%", y:"50%", w:180}
+  },
+  {
+    bg: ASSETS.bg[11],
+    text: "Түүх үргэлжилсээр… Одоогоор алсын зайн харилцаа ч гэсэн бид сэтгэлдээ хамтдаа. Түүх үргэлжилнэ ✨",
+    you: {x:"30%", y:"54%", w:175},
+    her: {x:"40%", y:"54%", w:175}
+  }
+];
+
+/* ===================================================
+   3) RENDERER (no framework, tiny & commented)
+   =================================================== */
+const $ = s => document.querySelector(s);
+const bg = $('#bg'), you = $('#you'), her = $('#her');
+const caption = $('#text'), stepEl = $('#step'), phone = $('#phone');
+const followBtn = $('#followBtn'), nFollow = $('#followNotif'), nMsg = $('#msgNotif');
+const dots = $('#dots');
+
+let i = 0;
+const n = SCENES.length;
+buildDots();
+
+function buildDots(){
+  dots.innerHTML = '';
+  for(let k=0;k<n;k++){
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dots.appendChild(d);
+  }
+}
+
+function setSprite(imgEl, spec){
+  if(!spec){ imgEl.style.display='none'; return; }
+  imgEl.style.display='block';
+  imgEl.src = spec.src || (imgEl===you?ASSETS.you:ASSETS.her);
+  imgEl.style.width = (spec.w||160)+'px';
+  imgEl.style.left = spec.x||'50%';
+  imgEl.style.top = spec.y||'60%';
+  imgEl.classList.add('fade');
+  setTimeout(()=>imgEl.classList.remove('fade'),300);
+}
+
+function setPhone(p){
+  if(!p){ phone.classList.remove('show'); return; }
+  phone.classList.add('show');
+  // reset mini UI
+  nFollow.style.display = 'none';
+  nMsg.style.display = 'none';
+  if(p.mode==='follow'){
+    followBtn.disabled=false;
+    followBtn.textContent='Follow';
+    followBtn.onclick = () => { followBtn.disabled=true; followBtn.textContent='Following'; nFollow.style.display='block'; };
+  }else if(p.mode==='msg'){
+    nMsg.style.display='block';
+  }
+}
+
+function render(idx){
+  const s = SCENES[idx];
+  bg.src = s.bg;
+  caption.textContent = s.text;
+  stepEl.textContent = `${idx+1}/${n}`;
+
+  // update dots
+  [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===idx));
+
+  setSprite(you, s.you);
+  setSprite(her, s.her);
+  setPhone(s.phone);
+}
+render(i);
+
+/* ===========================================
+   4) NAVIGATION (right-click next, dbl back)
+   =========================================== */
+function next(){ i=(i+1)%n; render(i); }
+function prev(){ i=(i-1+n)%n; render(i); }
+// Right-click = next (and prevent menu)
+window.addEventListener('contextmenu', e=>{ e.preventDefault(); next(); });
+// Left-click/tap anywhere also goes next (mobile-friendly)
+window.addEventListener('click', e=>{ next(); });
+// Double-click goes previous
+window.addEventListener('dblclick', e=>{ e.preventDefault(); prev(); });
+function setPhoneContent(phone) {
+  const screen = document.querySelector('#phone .screen');
+  if (!screen) return;
+
+  if (!phone) {
+    screen.innerHTML = '';
+    return;
+  }
+
+  // Decide how to paint the phone for the current scene
+  if (phone.type === 'image') {
+    // Pixel IG screenshot (fits, no crop)
+    screen.innerHTML = `< img class="ig-pixel" src="${phone.src}" alt="Instagram">`;
+  } else if (phone.type === 'chat') {
+    // Our “Ni hao fine shyt” chat mock
+    screen.innerHTML = `
+      <div class="chat">
+        <div class="status">iMessage</div>
+        <div class="thread">
+          <div class="bubble">Ni hao?</div>
+          <div class="bubble me">Ni hao fine shyt </div>
+          <div class="hint">tap to continue →</div>
+        </div>
+      </div>
+    `;
+  } else if (phone.type === 'html') {
+    // Fallback for any custom HTML you pass
+    screen.innerHTML = phone.html;
+  } else {
+    screen.innerHTML = '';
+  }
+
+  // replay the pop-in animation each time we swap content
+  animatePhonePop();
+}
+
+</script>
+</body>
+</html>
