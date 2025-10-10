@@ -408,138 +408,138 @@
 html, body { height:100%; overflow:hidden; }
 .screen { display:none; min-height:100vh; }
 .screen.active { display:flex; }           
+/* Potion section */
+#potion {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:60px 20px;
+  background:linear-gradient(180deg,#fff,#ffe6ef);
+}
 
-.potion{background:linear-gradient(180deg,#fff,rgba(255,182,193,.25));padding:48px 0}
-.potion-card{max-width:900px;margin:0 auto;background:rgba(255,255,255,.75);backdrop-filter:blur(6px);border:1px solid #fff;border-radius:18px;box-shadow:0 10px 30px rgba(61,43,43,.12)}
-.potion-title{text-align:center;font-size:22px;margin:0 0 20px}
-.potion-wrap{display:grid;grid-template-columns:1.6fr .9fr;gap:22px;align-items:center}
-@media (max-width:760px){.potion-wrap{grid-template-columns:1fr}}
-.potion-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.potion-list li{display:flex;align-items:center;gap:10px;font-size:16px}
-.potion-list input[type="checkbox"]{
-  appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;
-  width:22px;height:22px;border-radius:8px;border:2px solid rgba(0,0,0,.15);background:#fff;
-  transition:all .2s ease
+.potion-card {
+  background:rgba(255,255,255,0.95);
+  border-radius:30px;
+  padding:40px 60px;
+  box-shadow:0 12px 28px rgba(0,0,0,0.1);
+  font-family:'Press Start 2P', system-ui, sans-serif;
 }
-.potion-list input[type="checkbox"]:checked{
-  background:linear-gradient(180deg,#FFBED1,#FF9BB8);border-color:#FF9BB8;
-  box-shadow:0 6px 12px rgba(255,155,184,.35)
-}
-.potion-list input[type="checkbox"]:checked::after{
-  content:'❤';position:absolute;left:50%;top:50%;transform:translate(-50%,-55%) scale(.9)
-}
-.potion-bottle{position:relative;width:160px;max-width:38vw;margin:0 auto}
-.bottle-svg{display:block;width:100%;height:auto}
-.liquid-rect{
-  fill:#FF9BB8;
-  transition:height .6s ease, y .6s ease;
-  filter:drop-shadow(0 6px 12px rgba(255,155,184,.35));
-}
-.potion-bottle .smoke{
-  position:absolute;left:50%;top:-8px;transform:translateX(-50%);
-  opacity:0;pointer-events:none;font-size:22px;
-}
-.potion-bottle.full .smoke{animation:heartSmoke 1.8s ease-out 2}
-@keyframes heartSmoke{
-  0%{opacity:0;transform:translate(-50%,0) scale(.85)}
-  15%{opacity:1}
-  100%{opacity:0;transform:translate(-50%,-60px) scale(1.25)}
-}
-body {
-  font-family: 'Inter', sans-serif;
-}
+
 .potion-title {
-  font-family: 'Marck Script', cursive;
-  font-size: 28px;
-  color: #4b2b2b;
-}
-#potion .potion-card > input[type="checkbox"] { display: none !important; }
-/* Make the bottle the clipping container for the fill */
-#potion .bottle{
-  position: relative;
-  width: 170px;               /* keep your size */
-  height: 270px;
-  border: 4px solid rgba(0,0,0,.55);
-  border-radius: 60px;
-  margin-left: auto;
-  overflow: hidden;           /* critical: clips the fill */
-  background: radial-gradient(120% 90% at 30% 15%, #fff, #fafafa 40%, #f3f3f3 80%);
+  font-family:'Pacifico', cursive;
+  text-align:center;
+  font-size:26px;
+  margin-bottom:30px;
+  color:#e25289;
 }
 
-/* Position the fill *inside* the bottle */
-#potion .bottle .fill{
-  position: absolute;
-  left: 10px;                 /* inside the border */
-  right: 10px;
-  bottom: 10px;
-  height: 0;                  /* JS will grow this */
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ff9bb8, #ff6fa1);
-  box-shadow: inset 0 10px 18px rgba(255,255,255,.25);
-  transition: height .6s ease;
+.potion-wrap {
+  display:flex;
+  align-items:center;
+  gap:40px;
+  justify-content:center;
 }
 
-/* If you accidentally had a decorative after-element on the card, kill it */
-#potion .potion-card::after{ content:none !important; }
-/* Reset and style the checklist checkboxes */
-#potion .potion-list input[type="checkbox"]{
-  appearance: none;
-  -webkit-appearance: none;
-  width: 22px; height: 22px;
-  margin: 0 10px 0 0;
-  border-radius: 8px;
-  border: 2px solid rgba(0,0,0,.18);
+.potion-list {
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.potion-list li {
+  margin:12px 0;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.potion-list input[type="checkbox"] {
+  appearance:none;
+  -webkit-appearance:none;
+  width:24px;
+  height:24px;
+  border:2px solid #ff8cb3;
+  border-radius:8px;
   background:#fff;
-  display:inline-grid; place-content:center;
-  box-shadow: 0 4px 10px rgba(61,43,43,.10);
-  cursor: pointer;
-  transition: transform .12s ease;
-}
-#potion .potion-list input[type="checkbox"]:active{ transform: scale(.96); }
-
-/* the “checked” visual */
-#potion .potion-list input[type="checkbox"]::before{
-  content: "❤";                /* heart check */
-  transform: scale(0);
-  font-size: 14px;
-  line-height: 1;
-  transition: transform .18s ease;
-  background: linear-gradient(180deg, #FFBED1, #FF9BB8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 2px 8px rgba(255, 155, 184, .6);
-}
-#potion .potion-list input[type="checkbox"]:checked::before{
-  transform: scale(1);
+  cursor:pointer;
+  display:grid;
+  place-content:center;
+  transition:all 0.2s ease;
+  box-shadow:0 3px 5px rgba(0,0,0,0.1);
 }
 
-/* nicer spacing for items */
-#potion .potion-list li{
-  display:flex; align-items:center;
-  gap:10px; padding: 8px 0;
-  font-size: 16px;
-}
-#potion .potion-list li label{ display:flex; align-items:center; gap:10px; }
-/* Fix the pink strip under the potion card */
-#potion .card::before,
-#potion .card::after,
-#potion .potion-card::before,
-#potion .potion-card::after{
-  content: none !important;
-  display: none !important;
+.potion-list input[type="checkbox"]::before {
+  content:"💗";
+  transform:scale(0);
+  transition:transform 0.2s ease;
 }
 
-/* Make sure nothing inside the potion card is creating extra area */
-#potion .potion-card{
-  background: rgba(255,255,255,.92);   /* clean white card */
-  box-shadow: 0 10px 30px rgba(61,43,43,.12);
-  overflow: visible;                    /* keep normal */
+.potion-list input[type="checkbox"]:checked::before {
+  transform:scale(1);
 }
 
-/* Optional: if your page background shows through and you want it pure white here */
-#potion{
-  background: #fff;                     /* remove any section gradient behind */
+.potion-list input[type="checkbox"]:checked {
+  background:#ffe4ef;
+  border-color:#ff4f8a;
+}
+
+/* Bottle */
+.bottle {
+  position:relative;
+  width:160px;
+  height:260px;
+  border:4px solid #333;
+  border-radius:70px;
+  overflow:hidden;
+  background:radial-gradient(ellipse at top, #fff 40%, #f3f3f3);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.bottle .cap {
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:80px;
+  height:25px;
+  background:#ff8cb3;
+  border:3px solid #333;
+  border-radius:12px;
+}
+
+.bottle .fill {
+  width:100%;
+  height:0;
+  background:linear-gradient(180deg,#ff8cb3,#e25289);
+  transition:height 0.8s ease;
+}
+
+.bottle.full .fill {
+  height:85%;
+}
+
+/* Smoke (appears when full) */
+.smoke {
+  position:absolute;
+  top:-30px;
+  left:50%;
+  transform:translateX(-50%);
+  opacity:0;
+  font-size:20px;
+  animation:smokeUp 1s infinite;
+}
+
+.bottle.full .smoke {
+  opacity:1;
+  content:"💖";
+}
+
+@keyframes smokeUp {
+  0% { transform:translate(-50%,0) scale(1); opacity:1; }
+  100% { transform:translate(-50%,-30px) scale(1.3); opacity:0; }
 }
 </style>
 </head>
@@ -574,48 +574,28 @@ body {
         <h2>Миний хайр юу мэдэрч байна</h2>
       </div>
       <div class="pill-grid" id="hub"></div>
-    
-      <section id="potion" class="potion">
+      <div class="footer">Made with love. <span class="heart"></span></div>  
+      <section id="potion">
         <div class="potion-card">
-          <h2 class="potion-title">Хайрын жагсаалт</h2>
+          <h2 class="potion-title">Хайрын жагсаалт 💖</h2>
           <div class="potion-wrap">
-            <ul id="checklist" class="potion-list">
-              <li><input type="checkbox"> Өглөөгийн цай уух</li>
-              <li><input type="checkbox"> 10 аяга ус уух</li>
-              <li><input type="checkbox"> Дуртай дуугаа сонсох</li>
-              <li><input type="checkbox"> Зураг, бичлэг явуулах</li>
-              <li><input type="checkbox"> Video Call</li>
+            <ul class="potion-list" id="checklist">
+              <li><label><input type="checkbox"> Өглөөний цай уух</label></li>
+              <li><label><input type="checkbox"> 10 аяга ус уух</label></li>
+              <li><label><input type="checkbox"> Дуртай дуугаа сонсох</label></li>
+              <li><label><input type="checkbox"> Зураг, бичлэг явуулах</label></li>
+              <li><label><input type="checkbox"> Video Call</label></li>
             </ul>
-    
-            <!-- new SVG potion bottle -->
-            <div class="potion-bottle">
-              <svg id="potionBottle" class="bottle-svg" viewBox="0 0 120 200" aria-hidden="true">
-                <defs>
-                  <clipPath id="bottleClip">
-                    <path d="M20,60 Q20,30 60,30 Q100,30 100,60 L100,150 Q100,180 60,180 Q20,180 20,150 Z" />
-                  </clipPath>
-                </defs>
-                <!-- bottle cap -->
-                <rect x="38" y="18" width="44" height="14" rx="7" ry="7" fill="#ffb3c7" stroke="#c86a88" stroke-width="2" />
-                <!-- bottle outline -->
-                <path class="bottle-outline"
-                      d="M20,60 Q20,30 60,30 Q100,30 100,60 L100,150 Q100,180 60,180 Q20,180 20,150 Z"
-                      fill="rgba(255,255,255,0.15)"
-                      stroke="#6e6e6e" stroke-width="3" />
-                <!-- pink liquid -->
-                <g clip-path="url(#bottleClip)">
-                  <rect id="potionLiquid" x="22" y="180" width="76" height="0" rx="8" class="liquid-rect" />
-                  <rect x="22" y="60" width="10" height="120" fill="rgba(255,255,255,.25)"/>
-                </g>
-              </svg>
-              <div class="smoke" aria-hidden="true">💗</div>
-              
+      
+            <div class="bottle">
+              <div class="cap"></div>
+              <div class="fill"></div>
+              <div class="shine"></div>
+              <div class="smoke"></div>
             </div>
           </div>
-        </div> 
-    <div class="footer">Made with love. <span class="heart"></span></div>     
-    </div>
-    </div>
+        </div>
+      </section>
   </section>
   <section class="screen" id="eras" style="background:linear-gradient(180deg, var(--blush), #fff)">
     <div class="bg-slideshow" aria-hidden="true">
@@ -1027,26 +1007,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 
     </script>
-    <script>
-      const checks = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
-      const liquid = document.getElementById('potionLiquid');
-      const bottle = document.getElementById('potionBottle');
+   <script>
+    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+    const bottle = document.querySelector('.bottle');
+    const fill = bottle.querySelector('.fill');
     
-      function updatePotion(){
-        const total = checks.length || 1;
-        const done = checks.filter(c=>c.checked).length;
-        const pct  = done / total;
-        const floorY = 180;
-        const maxH   = 120;
-        const h      = Math.max(0, Math.round(maxH * pct));
-        const y      = floorY - h;
-        liquid.setAttribute('height', h);
-        liquid.setAttribute('y', y);
-        bottle.parentElement.classList.toggle('full', pct === 1);
-      }
+    function updateBottle() {
+      const total = checkboxes.length;
+      const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+      const percent = checked / total;
+      fill.style.height = `${percent * 85}%`;
     
-      checks.forEach(c => c.addEventListener('change', updatePotion));
-      updatePotion();
+      // when full
+      if (percent === 1) bottle.classList.add('full');
+      else bottle.classList.remove('full');
+    }
+    
+    checkboxes.forEach(cb => cb.addEventListener('change', updateBottle));
     </script>
 </body>
 </html>
