@@ -453,6 +453,74 @@ body {
   font-size: 28px;
   color: #4b2b2b;
 }
+#potion .potion-card > input[type="checkbox"] { display: none !important; }
+/* Make the bottle the clipping container for the fill */
+#potion .bottle{
+  position: relative;
+  width: 170px;               /* keep your size */
+  height: 270px;
+  border: 4px solid rgba(0,0,0,.55);
+  border-radius: 60px;
+  margin-left: auto;
+  overflow: hidden;           /* critical: clips the fill */
+  background: radial-gradient(120% 90% at 30% 15%, #fff, #fafafa 40%, #f3f3f3 80%);
+}
+
+/* Position the fill *inside* the bottle */
+#potion .bottle .fill{
+  position: absolute;
+  left: 10px;                 /* inside the border */
+  right: 10px;
+  bottom: 10px;
+  height: 0;                  /* JS will grow this */
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ff9bb8, #ff6fa1);
+  box-shadow: inset 0 10px 18px rgba(255,255,255,.25);
+  transition: height .6s ease;
+}
+
+/* If you accidentally had a decorative after-element on the card, kill it */
+#potion .potion-card::after{ content:none !important; }
+/* Reset and style the checklist checkboxes */
+#potion .potion-list input[type="checkbox"]{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  margin: 0 10px 0 0;
+  border-radius: 8px;
+  border: 2px solid rgba(0,0,0,.18);
+  background:#fff;
+  display:inline-grid; place-content:center;
+  box-shadow: 0 4px 10px rgba(61,43,43,.10);
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+#potion .potion-list input[type="checkbox"]:active{ transform: scale(.96); }
+
+/* the “checked” visual */
+#potion .potion-list input[type="checkbox"]::before{
+  content: "❤";                /* heart check */
+  transform: scale(0);
+  font-size: 14px;
+  line-height: 1;
+  transition: transform .18s ease;
+  background: linear-gradient(180deg, #FFBED1, #FF9BB8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 8px rgba(255, 155, 184, .6);
+}
+#potion .potion-list input[type="checkbox"]:checked::before{
+  transform: scale(1);
+}
+
+/* nicer spacing for items */
+#potion .potion-list li{
+  display:flex; align-items:center;
+  gap:10px; padding: 8px 0;
+  font-size: 16px;
+}
+#potion .potion-list li label{ display:flex; align-items:center; gap:10px; }
 </style>
 </head>
 <body>
@@ -486,7 +554,7 @@ body {
         <h2>Миний хайр юу мэдэрч байна</h2>
       </div>
       <div class="pill-grid" id="hub"></div>
-      <div class="footer">Made with love. <span class="heart"></span></div>
+    
       <section id="potion" class="potion">
         <div class="potion-card">
           <h2 class="potion-title">Хайрын жагсаалт</h2>
@@ -498,7 +566,7 @@ body {
               <li><input type="checkbox"> Зураг, бичлэг явуулах</li>
               <li><input type="checkbox"> Video Call</li>
             </ul>
-      
+    
             <!-- new SVG potion bottle -->
             <div class="potion-bottle">
               <svg id="potionBottle" class="bottle-svg" viewBox="0 0 120 200" aria-hidden="true">
@@ -521,9 +589,11 @@ body {
                 </g>
               </svg>
               <div class="smoke" aria-hidden="true">💗</div>
+              
             </div>
           </div>
-        </div>      
+        </div> 
+    <div class="footer">Made with love. <span class="heart"></span></div>     
     </div>
     </div>
   </section>
