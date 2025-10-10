@@ -408,138 +408,90 @@
 html, body { height:100%; overflow:hidden; }
 .screen { display:none; min-height:100vh; }
 .screen.active { display:flex; }           
-/* Potion section */
+#potion{
+  display:flex;justify-content:center;align-items:center;
+  padding:48px 16px;background:linear-gradient(180deg,#fff,#ffe6ef);
+}
+.potion-card{
+  background:rgba(255,255,255,.95);
+  border-radius:24px;padding:28px 28px;
+  box-shadow:0 10px 24px rgba(0,0,0,.10);
+}
+.potion-title{
+  font-family:'Pacifico',cursive;text-align:center;
+  font-size:22px;margin:0 0 18px;color:#e25289;
+}
+.potion-wrap{
+  display:flex;align-items:center;gap:22px;justify-content:center;
+}
+
+/* checklist */
+.potion-list{list-style:none;margin:0;padding:0}
+.potion-list li{margin:10px 0;font-size:16px;display:flex;align-items:center;gap:10px}
+.potion-list label{display:flex;align-items:center;gap:10px;cursor:pointer}
+.potion-list input[type="checkbox"]{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  width:20px;height:20px;border:2px solid #ff8cb3;border-radius:8px;
+  background:#fff;display:grid;place-content:center;transition:.2s;
+  box-shadow:0 2px 4px rgba(0,0,0,.08)
+}
+.potion-list input[type="checkbox"]::before{content:"💗";transform:scale(0);transition:.18s}
+.potion-list input[type="checkbox"]:checked{background:#ffe4ef;border-color:#ff4f8a}
+.potion-list input[type="checkbox"]:checked::before{transform:scale(1)}
+
+/* bottle (smaller & nicer) */
+.bottle{
+  --w:110px; --h:180px;
+  position:relative;width:var(--w);height:var(--h);
+  border:3px solid #303030;border-radius:48px;
+  overflow:hidden;display:flex;align-items:flex-end;justify-content:center;
+  background:
+    radial-gradient(120% 120% at 30% 20%,#ffffff 0%,#f6f6f6 55%,#eee 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
+}
+.bottle .cap{
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  width:60px;height:18px;border:3px solid #303030;border-radius:10px;
+  background:linear-gradient(180deg,#ffa0c3,#ff7aa9);
+}
+.bottle .fill{
+  width:100%;height:0;border-top-left-radius:32px;border-top-right-radius:32px;
+  background:linear-gradient(180deg,#ff8cb3 0%,#e25289 100%);
+  box-shadow:inset -8px -12px 0 rgba(0,0,0,.06);
+  transition:height .6s ease;
+}
+.bottle .shine{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.45),transparent 25%);
+  mix-blend-mode:screen;opacity:.7
+}
+.bottle.full .fill{height:85%}
+
+/* heart smoke when full */
+.smoke{position:absolute;top:-10px;left:50%;transform:translateX(-50%);pointer-events:none}
+.smoke .puff{
+  position:absolute;left:-6px;top:-6px;font-size:14px;opacity:0;
+  animation:floatHeart 1200ms ease-out forwards;
+}
+@keyframes floatHeart{
+  0%{transform:translate(-50%,0) scale(.7);opacity:0}
+  25%{opacity:1}
+  100%{transform:translate(-50%,-36px) scale(1.3) rotate(-12deg);opacity:0}
+}
+/* 💖 Fix unwanted pink bar before potion section */
 #potion {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:60px 20px;
-  background:linear-gradient(180deg,#fff,#ffe6ef);
+  background: none !important;       /* remove gradient */
+  background-color: transparent !important;
+  margin-top: 0 !important;
+  padding-top: 40px !important;
 }
 
-.potion-card {
-  background:rgba(255,255,255,0.95);
-  border-radius:30px;
-  padding:40px 60px;
-  box-shadow:0 12px 28px rgba(0,0,0,0.1);
-  font-family:'Press Start 2P', system-ui, sans-serif;
-}
-
-.potion-title {
-  font-family:'Pacifico', cursive;
-  text-align:center;
-  font-size:26px;
-  margin-bottom:30px;
-  color:#e25289;
-}
-
-.potion-wrap {
-  display:flex;
-  align-items:center;
-  gap:40px;
-  justify-content:center;
-}
-
-.potion-list {
-  list-style:none;
-  margin:0;
-  padding:0;
-}
-
-.potion-list li {
-  margin:12px 0;
-  font-size:18px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.potion-list input[type="checkbox"] {
-  appearance:none;
-  -webkit-appearance:none;
-  width:24px;
-  height:24px;
-  border:2px solid #ff8cb3;
-  border-radius:8px;
-  background:#fff;
-  cursor:pointer;
-  display:grid;
-  place-content:center;
-  transition:all 0.2s ease;
-  box-shadow:0 3px 5px rgba(0,0,0,0.1);
-}
-
-.potion-list input[type="checkbox"]::before {
-  content:"💗";
-  transform:scale(0);
-  transition:transform 0.2s ease;
-}
-
-.potion-list input[type="checkbox"]:checked::before {
-  transform:scale(1);
-}
-
-.potion-list input[type="checkbox"]:checked {
-  background:#ffe4ef;
-  border-color:#ff4f8a;
-}
-
-/* Bottle */
-.bottle {
-  position:relative;
-  width:160px;
-  height:260px;
-  border:4px solid #333;
-  border-radius:70px;
-  overflow:hidden;
-  background:radial-gradient(ellipse at top, #fff 40%, #f3f3f3);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.bottle .cap {
-  position:absolute;
-  top:-20px;
-  left:50%;
-  transform:translateX(-50%);
-  width:80px;
-  height:25px;
-  background:#ff8cb3;
-  border:3px solid #333;
-  border-radius:12px;
-}
-
-.bottle .fill {
-  width:100%;
-  height:0;
-  background:linear-gradient(180deg,#ff8cb3,#e25289);
-  transition:height 0.8s ease;
-}
-
-.bottle.full .fill {
-  height:85%;
-}
-
-/* Smoke (appears when full) */
-.smoke {
-  position:absolute;
-  top:-30px;
-  left:50%;
-  transform:translateX(-50%);
-  opacity:0;
-  font-size:20px;
-  animation:smokeUp 1s infinite;
-}
-
-.bottle.full .smoke {
-  opacity:1;
-  content:"💖";
-}
-
-@keyframes smokeUp {
-  0% { transform:translate(-50%,0) scale(1); opacity:1; }
-  100% { transform:translate(-50%,-30px) scale(1.3); opacity:0; }
+#potion::before,
+#potion::after,
+.potion-card::before,
+.potion-card::after {
+  display: none !important;
+  content: none !important;
 }
 </style>
 </head>
@@ -595,6 +547,7 @@ html, body { height:100%; overflow:hidden; }
             </div>
           </div>
         </div>
+
       </section>
   </section>
   <section class="screen" id="eras" style="background:linear-gradient(180deg, var(--blush), #fff)">
@@ -1009,21 +962,48 @@ document.addEventListener('DOMContentLoaded', ()=>{
     </script>
    <script>
     const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-    const bottle = document.querySelector('.bottle');
-    const fill = bottle.querySelector('.fill');
+    const bottle     = document.querySelector('#potion .bottle');
+    const fillEl     = bottle?.querySelector('.fill');
+    const smokeBox   = bottle?.querySelector('.smoke');
     
-    function updateBottle() {
-      const total = checkboxes.length;
-      const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
-      const percent = checked / total;
-      fill.style.height = `${percent * 85}%`;
+    let smokeTimer = null;
     
-      // when full
-      if (percent === 1) bottle.classList.add('full');
-      else bottle.classList.remove('full');
+    function spawnHeart() {
+      const h = document.createElement('span');
+      h.className = 'puff';
+      h.textContent = Math.random() < 0.5 ? '💖' : '💕';
+      // small random drift + timing
+      const dx = (Math.random()*20 - 10);
+      const delay = Math.random()*120;
+      h.style.left = `${-6 + dx}px`;
+      h.style.animationDelay = `${delay}ms`;
+      smokeBox.appendChild(h);
+      setTimeout(()=>h.remove(), 1400 + delay);
     }
     
+    function startSmoke() {
+      if (smokeTimer) return;
+      // burst, then gentle stream
+      for (let i=0;i<4;i++) setTimeout(spawnHeart, i*150);
+      smokeTimer = setInterval(spawnHeart, 450);
+    }
+    
+    function stopSmoke() {
+      clearInterval(smokeTimer);
+      smokeTimer = null;
+    }
+    
+    function updateBottle() {
+      if (!fillEl) return;
+      const total   = checkboxes.length;
+      const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+      const pct     = checked / total;
+      fillEl.style.height = `${Math.min(0.85, pct*0.85) * 100}%`;
+      if (pct === 1) { bottle.classList.add('full'); startSmoke(); }
+      else           { bottle.classList.remove('full'); stopSmoke(); }
+    }
     checkboxes.forEach(cb => cb.addEventListener('change', updateBottle));
+    updateBottle();
     </script>
 </body>
 </html>
